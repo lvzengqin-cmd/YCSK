@@ -986,29 +986,35 @@
                 
                 try {
                     // 先尝试从folder模式加载客服
-                    try {
-                        const agentResponse = await fetch(`data/agents/${agentId}.json`);
+                    const agentResponse = await fetch(`data/agents/${agentId}.json`);
+                    if (agentResponse.ok) {
                         config = await agentResponse.json();
-                        console.log(`已从folder模式加载客服: ${agentId}`);
-                    } catch (agentError) {
-                        console.warn(`无法从folder模式加载客服 ${agentId}，尝试从agents.json加载:`, agentError);
+                        console.log(`已从folder模式加载客服: ${agentId}`, config);
+                    } else {
+                        throw new Error(`HTTP ${agentResponse.status}`);
+                    }
+                } catch (agentError) {
+                    console.warn(`无法从folder模式加载客服 ${agentId}，尝试从agents.json加载:`, agentError);
+                    try {
                         // 尝试从agents.json加载
                         const agentsResponse = await fetch('data/agents.json');
+                        if (!agentsResponse.ok) throw new Error(`HTTP ${agentsResponse.status}`);
                         const agentsData = await agentsResponse.json();
                         
                         if (agentsData[agentId]) {
                             config = agentsData[agentId];
-                            console.log(`已从agents.json加载客服: ${agentId}`);
+                            console.log(`已从agents.json加载客服: ${agentId}`, config);
                         } else {
                             console.warn(`客服 ${agentId} 不存在，使用默认客服`);
                             config = agentsData['default'] || {};
                         }
+                    } catch (agentsError) {
+                        // 如果agents.json加载失败，回退到contact.json
+                        console.warn('无法加载客服配置，回退到contact.json:', agentsError);
+                        const contactResponse = await fetch('data/contact.json');
+                        if (!contactResponse.ok) throw new Error(`HTTP ${contactResponse.status}`);
+                        config = await contactResponse.json();
                     }
-                } catch (agentsError) {
-                    // 如果agents.json加载失败，回退到contact.json
-                    console.warn('无法加载客服配置，回退到contact.json:', agentsError);
-                    const contactResponse = await fetch('data/contact.json');
-                    config = await contactResponse.json();
                 }
                 
                 // 更新页面中的客服链接（同时兼容两种数据格式）
