@@ -1,0 +1,4 @@
+# Netlify 重定向规则
+# 确保 SPA 路由正常工作
+
+/admin/*    /admin/index.html   200
