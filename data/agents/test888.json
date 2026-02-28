@@ -1,0 +1,12 @@
+{
+  "usdt_address": "888888",
+  "telegram_handle": "888888",
+  "qq_number": "888888",
+  "qq_url": "https://wpa.qq.com/msgrd?v=3&uin=888888&site=qq&menu=yes",
+  "telegram_url": "https://t.me/888888",
+  "wechat_id": "888888",
+  "wechat_url": "weixin://dl/chat?888888",
+  "id": "test888",
+  "bnid_address": "8888881",
+  "url_info": "## 客服专属网址\n\n保存客服后，访问以下网址生成专属链接：\n**https://www.yucebot.com/agent-url-generator.html**\n\n或手动拼接网址：\n- 首页：`https://www.yucebot.com/index.html?agent=客服ID`\n- 白皮书：`https://www.yucebot.com/baipishu.html?agent=客服ID`\n- 用户手册：`https://www.yucebot.com/shouce.html?agent=客服ID`\n- 付款页面：`https://www.yucebot.com/payment.html?agent=客服ID`"
+}
