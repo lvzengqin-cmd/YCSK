@@ -1,0 +1,26 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "static/images"
+public_folder: "/images"
+
+collections:
+  - name: "agents"
+    label: "客服配置"
+    folder: "data/agents"
+    create: true
+    slug: "{{fields.id}}"
+    identifier_field: "id"
+    fields:
+      - {label: "客服ID", name: "id", widget: "string", hint: "用于URL参数，如 xiaowang、xiaozhang、212403705"}
+      - {label: "📋 客服专属网址说明", name: "url_info", widget: "markdown", default: "## 客服专属网址\n\n保存客服后，访问以下网址生成专属链接：\n**https://www.yucebot.com/agent-url-generator.html**\n\n或手动拼接网址：\n- 首页：`https://www.yucebot.com/index.html?agent=客服ID`\n- 白皮书：`https://www.yucebot.com/baipishu.html?agent=客服ID`\n- 用户手册：`https://www.yucebot.com/shouce.html?agent=客服ID`\n- 付款页面：`https://www.yucebot.com/payment.html?agent=客服ID`", required: false}
+      - {label: "QQ号码", name: "qq_number", widget: "string"}
+      - {label: "QQ链接", name: "qq_url", widget: "string", hint: "https://wpa.qq.com/msgrd?v=3&uin=小王QQ号&site=qq&menu=yes"}
+      - {label: "微信ID", name: "wechat_id", widget: "string"}
+      - {label: "微信链接", name: "wechat_url", widget: "string", hint: "weixin://dl/chat?小王微信"}
+      - {label: "Telegram账号", name: "telegram_handle", widget: "string"}
+      - {label: "Telegram链接", name: "telegram_url", widget: "string", hint: "https://t.me/小王电报"}
+      - {label: "USDT地址", name: "usdt_address", widget: "string"}
+      - {label: "BNID地址", name: "bnid_address", widget: "string"}
+      

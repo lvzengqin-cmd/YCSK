@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>付款信息 - 昱策事件合约全自动开单系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --secondary: #10B981;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --gray: #6B7280;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 导航栏 */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* 主视觉区 */
+        .hero {
+            background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
+            color: white;
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        /* 付款信息 */
+        .payment-info {
+            padding: 100px 0;
+        }
+        
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .payment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .payment-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .payment-card i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .payment-address {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .payment-note {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* 浮动客服按钮 */
+        .floating-chat {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            animation: pulse 2s infinite;
+            transition: transform 0.3s;
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+        
+        .chat-popup {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            min-width: 250px;
+            display: none;
+        }
+        
+        .chat-popup.show {
+            display: block;
+        }
+        
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .chat-header h4 {
+            color: var(--dark);
+            font-size: 1.2rem;
+        }
+        
+        .close-chat {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .contact-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .contact-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: background 0.3s;
+        }
+        
+        .contact-option:hover {
+            background: #f0f4ff;
+        }
+        
+        .contact-option i {
+            margin-right: 10px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .qq-icon { color: #12B7F5; }
+        .wechat-icon { color: #2DCB4F; }
+        .telegram-icon { color: #00ACED; }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .payment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-robot"></i>
+                    <span>昱策数字科技</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">返回首页</a></li>
+                    <li><a href="shouce.html">用户手册</a></li>
+                    <li><a href="baipishu.html">白皮书</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主视觉区 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>付款信息</h1>
+                <p>请选择您要使用的支付方式</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 付款信息 -->
+    <section class="payment-info">
+        <div class="container">
+            <div class="payment-grid">
+                <!-- USDT BEP20 -->
+                <div class="payment-card">
+                    <i class="fas fa-coins"></i>
+                    <h3>USDT (BEP20)</h3>
+                    <div class="payment-address" id="usdtAddress">加载中...</div>
+                    <p class="payment-note">请务必选择 BEP20 网络转账，其他网络可能导致资金丢失</p>
+                    <button class="copy-btn" onclick="copyAddress('usdtAddress')">复制地址</button>
+                </div>
+                
+                <!-- BNID -->
+                <div class="payment-card">
+                    <i class="fas fa-wallet"></i>
+                    <h3>币安ID 收款</h3>
+                    <div class="payment-address" id="bnidAddress">加载中...</div>
+                    <p class="payment-note">币安ID 链上收款地址，请确认网络正确</p>
+                    <button class="copy-btn" onclick="copyAddress('bnidAddress')">复制地址</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 浮动客服按钮 -->
+    <div class="floating-chat">
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-header">
+                <h4>联系客服</h4>
+                <button class="close-chat" onclick="closeChat()">&times;</button>
+            </div>
+            <div class="contact-options">
+                <a href="#" class="contact-option" id="qqLink">
+                    <i class="fab fa-qq qq-icon"></i>
+                    <span class="contact-text">加载中...</span>
+                </a>
+                <a href="#" class="contact-option" id="wechatLink">
+                    <i class="fab fa-weixin wechat-icon"></i>
+                    <span class="contact-text">加载中...</span>
+                </a>
+                <a href="#" class="contact-option" id="telegramLink">
+                    <i class="fab fa-telegram telegram-icon"></i>
+                    <span class="contact-text">加载中...</span>
+                </a>
+            </div>
+        </div>
+        <div class="chat-button" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+        </div>
+    </div>
+
+    <script>
+        // 复制地址功能
+        function copyAddress(elementId) {
+            const address = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(address).then(() => {
+                alert('地址已复制到剪贴板！');
+            }).catch(err => {
+                console.error('复制失败:', err);
+            });
+        }
+        
+        // 浮动客服功能
+        function toggleChat() {
+            const popup = document.getElementById('chatPopup');
+            popup.classList.toggle('show');
+        }
+        
+        function closeChat() {
+            document.getElementById('chatPopup').classList.remove('show');
+        }
+        
+        // 点击外部关闭客服窗口
+        document.addEventListener('click', function(e) {
+            const chatButton = document.querySelector('.chat-button');
+            const chatPopup = document.getElementById('chatPopup');
+            if (!chatButton.contains(e.target) && !chatPopup.contains(e.target)) {
+                chatPopup.classList.remove('show');
+            }
+        });
+        
+        // 从URL参数中获取客服ID
+        function getAgentIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('agent') || 'default';
+        }
+
+        // 加载动态客服配置（支持多客服）
+        async function loadContactConfig() {
+            try {
+                const agentId = getAgentIdFromUrl();
+                let config;
+                
+                try {
+                    // 先尝试从folder模式加载客服
+                    try {
+                        const agentResponse = await fetch(`data/agents/${agentId}.json`);
+                        config = await agentResponse.json();
+                        console.log(`已从folder模式加载客服: ${agentId}`);
+                    } catch (agentError) {
+                        console.warn(`无法从folder模式加载客服 ${agentId}，尝试从agents.json加载:`, agentError);
+                        // 尝试从agents.json加载
+                        const agentsResponse = await fetch('data/agents.json');
+                        const agentsData = await agentsResponse.json();
+                        
+                        if (agentsData[agentId]) {
+                            config = agentsData[agentId];
+                            console.log(`已从agents.json加载客服: ${agentId}`);
+                        } else {
+                            console.warn(`客服 ${agentId} 不存在，使用默认客服`);
+                            config = agentsData['default'] || {};
+                        }
+                    }
+                } catch (agentsError) {
+                    // 如果agents.json加载失败，回退到contact.json
+                    console.warn('无法加载客服配置，回退到contact.json:', agentsError);
+                    const contactResponse = await fetch('data/contact.json');
+                    config = await contactResponse.json();
+                }
+                
+                // 更新页面中的客服链接（同时兼容两种数据格式）
+                const telegramUrl = config.telegram_url || config.telegramUrl || config.telegramLink || 'https://t.me/QJDF77';
+                const telegramHandle = config.telegram_handle || config.telegramHandle || '@QJDF77';
+                const qqUrl = config.qq_url || config.qqUrl || 'https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes';
+                const qqNumber = config.qq_number || config.qqNumber || '23558335';
+                const wechatUrl = config.wechat_url || config.wechatUrl || 'weixin://dl/chat?ZNHK88';
+                const wechatId = config.wechat_id || config.wechatId || 'ZNHK88';
+                const usdtAddress = config.usdt_address || config.usdtAddress || '0x0bb1ddf4beb12e2a106f215a579ab6cba0794b62';
+                const bnidAddress = config.bnid_address || config.bnidAddress || '1059044975';
+                
+                // 更新页面元素
+                const qqLink = document.getElementById('qqLink');
+                qqLink.href = qqUrl;
+                qqLink.querySelector('.contact-text').textContent = `QQ: ${qqNumber}`;
+                
+                const wechatLink = document.getElementById('wechatLink');
+                wechatLink.href = wechatUrl;
+                wechatLink.querySelector('.contact-text').textContent = `微信: ${wechatId}`;
+                
+                const telegramLink = document.getElementById('telegramLink');
+                telegramLink.href = telegramUrl;
+                telegramLink.querySelector('.contact-text').textContent = `Telegram: ${telegramHandle}`;
+                
+                document.getElementById('usdtAddress').textContent = usdtAddress;
+                document.getElementById('bnidAddress').textContent = bnidAddress;
+                
+            } catch (error) {
+                console.warn('无法加载客服配置，使用默认值:', error);
+                // 使用默认值
+                document.getElementById('qqLink').href = 'https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes';
+                document.getElementById('wechatLink').href = 'weixin://dl/chat?ZNHK88';
+                document.getElementById('telegramLink').href = 'https://t.me/QJDF77';
+                document.getElementById('usdtAddress').textContent = '0x0bb1ddf4beb12e2a106f215a579ab6cba0794b62';
+                document.getElementById('bnidAddress').textContent = '1059044975';
+            }
+        }
+
+        // 自动保留agent参数到所有链接
+        function preserveAgentParameter() {
+            const agentId = getAgentIdFromUrl();
+            if (agentId && agentId !== 'default') {
+                // 获取页面上所有的链接
+                const links = document.querySelectorAll('a[href]');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    // 只处理内部链接（不处理mailto:、tel:、https://等外部链接）
+                    if (href && !href.startsWith('mailto:') && !href.startsWith('tel:') && 
+                        !href.startsWith('http://') && !href.startsWith('https://') &&
+                        !href.startsWith('#') && !href.startsWith('javascript:')) {
+                        // 检查链接是否已经有查询参数
+                        if (href.includes('?')) {
+                            // 如果已经有查询参数，检查是否已有agent参数
+                            if (!href.includes('agent=')) {
+                                link.setAttribute('href', href + '&agent=' + agentId);
+                            }
+                        } else {
+                            // 如果没有查询参数，添加agent参数
+                            link.setAttribute('href', href + '?agent=' + agentId);
+                        }
+                    }
+                });
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadContactConfig();
+            preserveAgentParameter();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>昱策事件合约全自动开单机器人白皮书</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#0FC6C2',
+                        success: '#00B578',
+                        danger: '#F53F3F',
+                        warning: '#FF7D00',
+                        dark: '#111827',
+                        'dark-light': '#1F2937',
+                        'dark-lighter': '#374151'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .card-hover { transition: all 0.3s ease; }
+            .card-hover:hover { transform: translateY(-5px); }
+            .gradient-border { position: relative; border-radius: 0.5rem; z-index: 0; }
+            .gradient-border::before { content: ""; position: absolute; inset: -2px; border-radius: 0.6rem; background: linear-gradient(135deg, #165DFF, #0FC6C2); z-index: -1; }
+        }
+    </style>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(22, 93, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(15, 198, 194, 0.05) 0%, transparent 20%);
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1E293B; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748B; }
+        .fade-in { animation: fadeIn 0.6s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+        .progress-container { width: 100%; height: 3px; background: transparent; position: fixed; top: 0; z-index: 50; }
+        .progress-bar { height: 3px; background: linear-gradient(90deg, #165DFF, #0FC6C2); width: 0%; }
+        
+        /* 浮动客服按钮 */
+        .floating-chat {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #165DFF 0%, #0FC6C2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
+            animation: pulse 2s infinite;
+            transition: transform 0.3s;
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(22, 93, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(22, 93, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(22, 93, 255, 0); }
+        }
+        
+        .chat-popup {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: #1F2937;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            min-width: 250px;
+            display: none;
+            border: 1px solid #374151;
+        }
+        
+        .chat-popup.show {
+            display: block;
+        }
+        
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #374151;
+        }
+        
+        .chat-header h4 {
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .close-chat {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #9CA3AF;
+        }
+        
+        .contact-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .contact-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            transition: background 0.3s;
+        }
+        
+        .contact-option:hover {
+            background: #374151;
+        }
+        
+        .contact-option i {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+        
+        .qq-icon { color: #00a8ff; }
+        .wechat-icon { color: #2ecc71; }
+        .telegram-icon { color: #00aced; }
+    </style>
+</head>
+<body class="text-gray-200">
+    <!-- 进度条 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <header class="sticky top-0 bg-dark/80 backdrop-blur-md z-40 border-b border-gray-800 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-robot text-primary text-2xl mr-3"></i>
+                    <span class="text-xl font-semibold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">昱策事件合约机器人</span>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#intro" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">白皮书概览</a>
+                    <a href="#painpoints" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">用户痛点</a>
+                    <a href="#values" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">核心价值</a>
+                    <a href="#advantages" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">核心优势</a>
+                    <a href="#deploy" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">部署运行</a>
+                    <a href="#balance" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">单量与胜率</a>
+                    <a href="#scenarios" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">用户场景</a>
+                    <a href="#risk" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">风险提示</a>
+                    <a href="./shouce.html" class="text-primary font-semibold">用户手册</a>
+                    <a href="https://t.me/QJDF77" target="_blank" rel="noopener" class="text-gray-300 hover:text-primary transition-colors flex items-center" title="Telegram">
+                        <i class="fab fa-telegram-plane text-lg"></i>
+                        <span class="ml-2 text-sm">联系我们</span>
+                    </a>
+                    <a href="./index.html" class="text-gray-300 hover:text-primary transition-colors flex items-center" title="返回首页">
+                        <i class="fas fa-home text-lg"></i>
+                        <span class="ml-2 text-sm">首页</span>
+                    </a>
+                </nav>
+                <div class="md:hidden">
+                    <button id="menuBtn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden bg-dark-light border-b border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#intro" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">白皮书概览</a>
+                <a href="#painpoints" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">用户痛点</a>
+                <a href="#values" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">核心价值</a>
+                <a href="#advantages" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">核心优势</a>
+                <a href="#deploy" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">部署运行</a>
+                <a href="#balance" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">单量与胜率</a>
+                <a href="#scenarios" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">用户场景</a>
+                <a href="#risk" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">风险提示</a>
+                <a href="./shouce.html" class="block px-3 py-2 text-primary rounded-md text-base font-semibold transition-colors">用户手册</a>
+                <a href="https://t.me/QJDF77" target="_blank" rel="noopener" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">Telegram 联系</a>
+                <a href="./index.html" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">返回首页</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主横幅 -->
+    <div class="relative bg-gradient-to-r from-dark-light to-dark py-16 md:py-24 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-primary blur-3xl"></div>
+            <div class="absolute -left-20 -bottom-20 w-96 h-96 rounded-full bg-secondary blur-3xl"></div>
+        </div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text leading-tight">
+                    昱策事件合约全自动开单机器人白皮书
+                </h1>
+                <p class="text-xl text-gray-300 mb-8">全球加密用户的稳定盈利智能解决方案</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="./shouce.html" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                        查看用户手册 <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="https://t.me/QJDF77" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 border border-primary text-base font-medium rounded-md text-primary bg-transparent hover:bg-primary/10 transition-colors">
+                        <i class="fab fa-telegram-plane mr-2"></i> 联系我们
+                    </a>
+                    <a href="./index.html" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-secondary hover:bg-secondary/90 transition-colors shadow-lg shadow-secondary/20">
+                        <i class="fas fa-home mr-2"></i> 返回首页
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主体内容 -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- 概览/引言 -->
+        <section id="intro" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-book-open text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">引言</h2>
+            </div>
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                <p class="text-gray-300 leading-relaxed">
+                    昱策 币安事件合约全自动开单机器人白皮书 —— 全球加密货币用户的稳定盈利智能解决方案
+                </p>
+                <p class="text-gray-300 leading-relaxed mt-4">
+                    在加密货币的浪潮中，合约交易凭借"以小博大"的杠杆属性成为重要赛道，但人工盯盘、主观判断、瞬时波动、跨时区精力不足以及复杂参数门槛，使多数用户"想盈利却难盈利"。昱策 机器人以 AI 驱动与自动化执行为核心，目标是让用户无需专业知识与大量时间投入，即可在长期维度实现更稳定的交易表现。
+                </p>
+                <p class="text-gray-300 leading-relaxed mt-4">
+                    昱策 旨在将"靠运气博弈"转变为"靠技术稳健理财"，以"24 小时无间断自动做单、月胜率稳定 70%+"为硬指标，服务刚接触合约的新手、时间紧张的上班族，以及追求收益稳定性的理财型用户。
+                </p>
+            </div>
+        </section>
+
+        <!-- 用户痛点 -->
+        <section id="painpoints" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-user-minus text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">一、全球加密用户的共同痛点</h2>
+            </div>
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                <ul class="space-y-4 text-gray-300">
+                    <li>
+                        <span class="text-white font-semibold">1) 时间与精力的极致消耗：</span>
+                        市场 7×24 小时运转，人工盯盘难以为继，漏单误单普遍。
+                    </li>
+                    <li>
+                        <span class="text-white font-semibold">2) 信号判断的主观偏差：</span>
+                        单一指标、滞后线报、情绪化操作常致亏损，主观胜率偏低。
+                    </li>
+                    <li>
+                        <span class="text-white font-semibold">3) 参数调整的技术壁垒：</span>
+                        固定参数难适配快变行情，止盈止损与金额策略常失衡。
+                    </li>
+                    <li>
+                        <span class="text-white font-semibold">4) 单量与胜率的矛盾：</span>
+                        高胜率往往牺牲单量；放宽筛选则引入噪声，胜率下滑。
+                    </li>
+                </ul>
+                <div class="mt-6 space-y-3 text-gray-300">
+                    <p>调研显示，83% 的人工盯盘用户每月因"精力不集中/时间冲突"导致的潜在收益损失平均达 20%-30%。仅依赖主观判断做单的用户，月胜率平均不足 40%。</p>
+                    <p>固定参数策略在不同行情下常出现两难：震荡中"盈利回吐"，趋势中"过早止损"。而"追求高胜率"的严格筛选可能导致单量不足，"追求高单量"的宽松筛选又会拉低胜率，形成"要么没单做，要么做了亏"的困境。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 核心价值 -->
+        <section id="values" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-gem text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">二、昱策 机器人的核心价值</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-2">24 小时无间断自动做单</h3>
+                    <p class="text-gray-300">云端信号 + 本地执行，跨时区捕捉行情，5 秒内完成交易流程。</p>
+                </div>
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-2">70%+ 月胜率基准</h3>
+                    <p class="text-gray-300">长期稳定区间 70%-80%，历史可追溯，风险边界清晰。</p>
+                </div>
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-2">轻量化理财属性</h3>
+                    <p class="text-gray-300">零专业门槛与低时间占用，灵活适配多层级资金规模。</p>
+                </div>
+            </div>
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl mt-6">
+                <ul class="space-y-3 text-gray-300">
+                    <li><span class="text-white font-semibold">长期稳定性：</span>自上线以来月胜率维持 70%-80%，未出现低于 65% 的月份；极端事件（如交易所暴雷、宏观政策扰动）期间仍稳于 70%+。</li>
+                    <li><span class="text-white font-semibold">可验证历史：</span>可提供近 6 个月完整交易记录（时间、品种、方向、止盈止损、实际收益），并可在币安合约平台交叉验证。</li>
+                    <li><span class="text-white font-semibold">风险边界：</span>历史最大连胜 16 单、最大连损 4 单；建议单次开单金额 ≤ 账户资金 10% 以控制敞口。</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 四大核心优势（节选并结构化） -->
+        <section id="advantages" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-shield-halved text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">三、四大核心优势</h2>
+            </div>
+            <div class="space-y-6">
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-3">1) 高胜率信号引擎：AI + 七大指标 + 线报验证</h3>
+                    <p class="text-gray-300">成交量、ATR、ADX、MACD 背离、RSI 动态阈值、布林带突破、资金流向等七大指标，配合机器学习动态权重与异常行情识别，并与信息面线报交叉验证以提升有效性。</p>
+                    <div class="mt-4 grid md:grid-cols-2 gap-4 text-gray-300">
+                        <div>
+                            <p class="text-white font-semibold mb-2">七大核心指标（量/价/时/空）：</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>成交量（Volume）：上涨放量更可靠，量价背离及时过滤。</li>
+                                <li>波动率（ATR）：横盘降频输出，趋势提敏捕捉关键点位。</li>
+                                <li>趋势强度（ADX）：>25 视为趋势优先，<20 视为震荡更严筛。</li>
+                                <li>MACD 背离：通过与价格背离判断潜在反转，规避追涨杀跌。</li>
+                                <li>RSI 动态阈值：震荡 30-70、趋势 10-90，随波动率自适应。</li>
+                                <li>布林带突破：结合量能与回踩确认，过滤"假突破"。</li>
+                                <li>资金流向（Money Flow）：识别主力资金流入/流出。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="text-white font-semibold mb-2">AI 深度优化与信息面同源：</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>盈利概率预测：仅推送概率 ≥65% 的信号。</li>
+                                <li>权重动态调整：依据相似行情库自适应调整指标权重。</li>
+                                <li>异常行情识别：突变波动/量能下自动降噪或暂停。</li>
+                                <li>线报交叉验证：多源资讯 10 秒内解析并校准策略。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-3">2) 动态参数优化：覆盖 42 项核心参数</h3>
+                    <p class="text-gray-300">从信号筛选、订单执行、风险控制到适配调参，按日校准并回溯验证，保证调整具备数据依据。</p>
+                    <div class="mt-4 grid md:grid-cols-2 gap-4 text-gray-300">
+                        <div>
+                            <p class="text-white font-semibold mb-2">四类 42 项参数：</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>信号筛选（12）：ATR 阈值、RSI 阈值、ADX 阈值等。</li>
+                                <li>订单执行（10）：滑点容忍、有效期、市价/限价阈值等。</li>
+                                <li>风险控制（15）：开单占比、止盈止损、最大连损暂停等。</li>
+                                <li>适配调整（5）：震荡/趋势/异常行情系数等。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="text-white font-semibold mb-2">日校准与回溯验证：</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>每日开盘后 1 小时采集波动率、量能、趋势强度、资金流向。</li>
+                                <li>识别当日行情特征并选取最优参数组合实时更新。</li>
+                                <li>回溯近 7 天模拟交易：胜率提升 ≥5% 且回撤降低才应用，否则回滚并重算。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-3">3) 低门槛部署运行：5 分钟完成</h3>
+                    <p class="text-gray-300">仅需一台 Android 设备，安装、调试、启动三步即可，支持多语言与远程协助。</p>
+                    <div class="mt-4 grid md:grid-cols-2 gap-4 text-gray-300">
+                        <div>
+                            <p class="text-white font-semibold mb-2">极简设备要求：</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Android 8.0+ 手机/平板，内存 ≥4GB、存储 ≥10GB。</li>
+                                <li>稳定 Wi‑Fi 或 4G/5G（国内需全程 VPN，海外直连）。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="text-white font-semibold mb-2">三步完成部署：</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>安装客户端（.apk 与视频教程/远程安装支持）。</li>
+                                <li>调试设备：信号接收、实时性验证、异常处理检测。</li>
+                                <li>设置单次开单金额（建议 5%-10%），点击"启动"。</li>
+                            </ul>
+                            <p class="mt-2">支持 12 种语言；提供 QQ/微信/Telegram 等多语技术支持。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-3">4) 全自动化执行：毫秒级响应 + 保活机制</h3>
+                    <p class="text-gray-300">全球分布式服务器与断网重连机制，确保 7×24 小时持续运行，降低滑点与漏单。</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-300 mt-2">
+                        <li>信号传输 ≤100ms，客户端 5 秒内完成下单流程。</li>
+                        <li>多云集群容错与节点接管，信号不中断。</li>
+                        <li>安卓端申请后台保活与电池优化豁免，息屏也在线。</li>
+                        <li>断网自动重连并补执行有效期内的信号。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 部署运行（节选要点） -->
+        <section id="deploy" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-screwdriver-wrench text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">四、部署与运行要点</h2>
+            </div>
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                <ol class="list-decimal list-inside text-gray-300 space-y-2">
+                    <li>获取并安装客户端（官方提供 .apk 与视频教程，支持远程安装）。</li>
+                    <li>完成 API 绑定与设备调试（信号接收测试、实时性验证、异常处理检测）。</li>
+                    <li>设置单次开单金额（建议账户 5%-10%），启动机器人自动运行。</li>
+                </ol>
+                <div class="mt-4 text-gray-300">
+                    <p class="text-white font-semibold mb-2">多语言与全球支持：</p>
+                    <p>客户端支持 12 种主流语言；官方提供多语言技术支持渠道（QQ、微信、Telegram、邮件等），保障全球用户无障碍部署与使用。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 单量与胜率 -->
+        <section id="balance" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-scale-balanced text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">五、单量与胜率的双平衡</h2>
+            </div>
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                <p class="text-gray-300">多周期脚本（1/2/3/5 分钟）独立运行并交叉验证，每月 300+ 有效信号，提升覆盖同时保持胜率稳定；当脚本胜率连续偏低时自动暂停，以保护整体表现。</p>
+                <div class="grid md:grid-cols-2 gap-4 text-gray-300 mt-4">
+                    <div>
+                        <p class="text-white font-semibold mb-2">多周期脚本定位：</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>1 分钟：短线快频，15-20 分钟/信号，面向高单量。</li>
+                            <li>2 分钟：兼顾短线与波段，30-40 分钟/信号。</li>
+                            <li>3 分钟：以波段为主，约 1 小时/信号，偏稳健。</li>
+                            <li>5 分钟：中长线，1.5-2 小时/信号，风险承受较低者友好。</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-white font-semibold mb-2">单量与胜率的平衡机制：</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>信号交叉验证：多脚本同向信号标记为高优先级。</li>
+                            <li>单脚本信号二次筛选：需盈利概率 ≥70% 才推送。</li>
+                            <li>脚本自适应暂停：某脚本 3 天胜率 <65% 将暂停推送。</li>
+                        </ul>
+                        <p class="mt-2">统计显示启用全部脚本时月胜率仍稳定 70%+，与单脚本持平。</p>
+                    </div>
+                </div>
+                <div class="mt-4 text-gray-300">
+                    <p class="text-white font-semibold mb-2">单量与收益：</p>
+                    <p>每月 300+ 有效信号，日均 10+ 单，为不同偏好用户提供足够信号覆盖，有利于在"高胜率"前提下实现收益的持续累积。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 用户场景 -->
+        <section id="scenarios" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-users text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">六、适用用户场景</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-2">新手用户</h3>
+                    <p class="text-gray-300">无需专业知识即可上手，通过交易记录理解逻辑，循序提升。</p>
+                </div>
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-2">上班族/学生</h3>
+                    <p class="text-gray-300">工作学习时自动捕捉行情，闲时查看结果即可。</p>
+                </div>
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-2">理财型用户</h3>
+                    <p class="text-gray-300">关注长期稳定收益与可控回撤，适合作为策略配置。</p>
+                </div>
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="text-white font-semibold mb-2">跨时区用户</h3>
+                    <p class="text-gray-300">无需熬夜盯盘，自动衔接不同市场时段。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 风险提示 -->
+        <section id="risk" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-triangle-exclamation text-primary"></i>
+                </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-white">七、风险提示</h2>
+            </div>
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                <ul class="space-y-3 text-gray-300">
+                    <li><span class="text-white font-semibold">市场波动风险：</span>宏观、政策、情绪等可能引发短期暴涨暴跌；短期连损仍可能出现。</li>
+                    <li><span class="text-white font-semibold">技术风险：</span>服务器故障、API 异常、网络攻击等可能导致信号延迟或执行失败。</li>
+                </ul>
+                <div class="mt-4 text-gray-300">
+                    <p class="text-white font-semibold mb-2">使用建议：</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>仅用闲置资金参与，确保不影响正常生活。</li>
+                        <li>单次开单金额 ≤ 账户资金的 10%。</li>
+                        <li>建议每日/每两日查看账户情况，及时处理异常。</li>
+                        <li>了解并遵守当地加密监管政策。</li>
+                    </ul>
+                    <p class="text-gray-400 text-sm mt-3">所有信号与服务基于数据与算法分析，仅作参考，不构成投资建议。用户需独立决策并自担风险。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 底部风险提示块 -->
+        <div class="bg-danger/10 border border-danger/30 rounded-xl p-6 shadow-lg fade-in">
+            <p class="text-danger flex items-start">
+                <i class="fas fa-exclamation-triangle text-2xl mr-4 mt-1"></i>
+                <span>加密货币合约交易存在价格剧烈波动、杠杆风险等不确定性，可能导致重大损失。本文仅供参考，投资需谨慎。</span>
+            </p>
+        </div>
+        
+        <!-- 结语 -->
+        <section id="conclusion" class="mb-16 fade-in mt-12">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-flag-checkered text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">八、结语</h2>
+            </div>
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                <p class="text-gray-300">昱策 通过"高胜率信号引擎""动态参数优化""低门槛部署""全自动化执行"四大核心优势，将专业交易技术转化为可被大众轻松使用的工具，助力全球用户实现"无需专业知识、无需占用时间、即可稳定盈利"。</p>
+                <p class="text-gray-300 mt-3">现在，仅需一台安卓设备，按指引完成 5 分钟部署，即可开启你的加密资产稳健增值之旅。机会留给行动者，欢迎随时 <a href="https://t.me/QJDF77" target="_blank" rel="noopener" class="text-primary underline">联系我们</a>。</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark border-t border-gray-800 py-8 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center">
+                        <i class="fas fa-robot text-primary text-2xl mr-3"></i>
+                        <span class="text-xl font-semibold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">昱策事件合约机器人</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mt-2">专业的加密货币自动交易解决方案</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="https://t.me/QJDF77" target="_blank" rel="noopener" class="text-gray-400 hover:text-primary transition-colors inline-flex items-center"><i class="fab fa-telegram-plane text-xl"></i><span class="ml-2 text-sm">联系我们</span></a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fab fa-qq text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fas fa-envelope text-xl"></i></a>
+                    <a href="./index.html" class="text-gray-400 hover:text-primary transition-colors inline-flex items-center"><i class="fas fa-home text-xl"></i><span class="ml-2 text-sm">返回首页</span></a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-6 pt-6 text-center text-gray-500 text-sm">
+                <p>© 2026 昱策事件合约机器人. 保留所有权利.</p>
+                <p class="mt-1">加密货币交易有风险，投资需谨慎</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 浮动客服按钮 -->
+    <div class="floating-chat">
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-header">
+                <h4>联系客服</h4>
+                <button class="close-chat" onclick="closeChat()">&times;</button>
+            </div>
+            <div class="contact-options">
+                <a href="#" class="contact-option" id="qqLink">
+                    <i class="fab fa-qq qq-icon"></i>
+                    <span class="contact-text">加载中...</span>
+                </a>
+                <a href="#" class="contact-option" id="wechatLink">
+                    <i class="fab fa-weixin wechat-icon"></i>
+                    <span class="contact-text">加载中...</span>
+                </a>
+                <a href="#" class="contact-option" id="telegramLink">
+                    <i class="fab fa-telegram telegram-icon"></i>
+                    <span class="contact-text">加载中...</span>
+                </a>
+            </div>
+        </div>
+        <div class="chat-button" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+    <script>
+        // 从URL参数中获取客服ID
+        function getAgentIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('agent') || 'default';
+        }
+
+        // 加载动态客服配置（支持多客服）
+        async function loadContactConfig() {
+            try {
+                const agentId = getAgentIdFromUrl();
+                let config;
+                
+                try {
+                    // 先尝试从folder模式加载客服
+                    try {
+                        const agentResponse = await fetch(`data/agents/${agentId}.json`);
+                        config = await agentResponse.json();
+                        console.log(`已从folder模式加载客服: ${agentId}`);
+                    } catch (agentError) {
+                        console.warn(`无法从folder模式加载客服 ${agentId}，尝试从agents.json加载:`, agentError);
+                        // 尝试从agents.json加载
+                        const agentsResponse = await fetch('data/agents.json');
+                        const agentsData = await agentsResponse.json();
+                        
+                        if (agentsData[agentId]) {
+                            config = agentsData[agentId];
+                            console.log(`已从agents.json加载客服: ${agentId}`);
+                        } else {
+                            console.warn(`客服 ${agentId} 不存在，使用默认客服`);
+                            config = agentsData['default'] || {};
+                        }
+                    }
+                } catch (agentsError) {
+                    // 如果agents.json加载失败，回退到contact.json
+                    console.warn('无法加载客服配置，回退到contact.json:', agentsError);
+                    const contactResponse = await fetch('data/contact.json');
+                    config = await contactResponse.json();
+                }
+                
+                // 更新页面中的客服链接（同时兼容两种数据格式）
+                const telegramUrl = config.telegram_url || config.telegramUrl || 'https://t.me/QJDF77';
+                const telegramHandle = config.telegram_handle || config.telegramHandle || '@QJDF77';
+                const qqUrl = config.qq_url || config.qqUrl || 'https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes';
+                const qqNumber = config.qq_number || config.qqNumber || '23558335';
+                const wechatUrl = config.wechat_url || config.wechatUrl || 'weixin://dl/chat?OfficialWeChat';
+                const wechatId = config.wechat_id || config.wechatId || '';
+                
+                // 更新导航栏中的联系链接
+                const navTelegramLinks = document.querySelectorAll('a[href="https://t.me/QJDF77"]');
+                navTelegramLinks.forEach(link => {
+                    link.href = telegramUrl;
+                });
+                
+                // 更新"联系我们"按钮
+                const contactButtons = document.querySelectorAll('a:has(i.fab-telegram-plane), a:contains("联系我们")');
+                document.querySelectorAll('a').forEach(link => {
+                    if (link.textContent.includes('联系我们') || link.innerHTML.includes('联系我们')) {
+                        link.href = telegramUrl;
+                    }
+                });
+                
+                // 更新浮动客服面板
+                const qqLink = document.getElementById('qqLink');
+                qqLink.href = qqUrl;
+                qqLink.querySelector('.contact-text').textContent = `QQ: ${qqNumber}`;
+                
+                const wechatLink = document.getElementById('wechatLink');
+                wechatLink.href = wechatUrl;
+                wechatLink.querySelector('.contact-text').textContent = `微信: ${wechatId}`;
+                
+                const telegramLink = document.getElementById('telegramLink');
+                telegramLink.href = telegramUrl;
+                telegramLink.querySelector('.contact-text').textContent = `Telegram: ${telegramHandle}`;
+                
+                // 更新页脚链接
+                const footerLinks = document.querySelectorAll('footer a');
+                footerLinks.forEach(link => {
+                    if (link.href && link.href.includes('QJDF77')) {
+                        link.href = telegramUrl;
+                    }
+                });
+                
+            } catch (error) {
+                console.warn('无法加载客服配置，使用默认值:', error);
+                // 使用默认值
+                document.getElementById('qqLink').href = 'https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes';
+                document.getElementById('wechatLink').href = 'weixin://dl/chat?ZNHK88';
+                document.getElementById('telegramLink').href = 'https://t.me/QJDF77';
+            }
+        }
+
+        // 浮动客服功能
+        function toggleChat() {
+            const popup = document.getElementById('chatPopup');
+            popup.classList.toggle('show');
+        }
+        
+        function closeChat() {
+            document.getElementById('chatPopup').classList.remove('show');
+        }
+        
+        // 点击外部关闭客服窗口
+        document.addEventListener('click', function(e) {
+            const chatButton = document.querySelector('.chat-button');
+            const chatPopup = document.getElementById('chatPopup');
+            if (!chatButton.contains(e.target) && !chatPopup.contains(e.target)) {
+                chatPopup.classList.remove('show');
+            }
+        });
+
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); });
+        });
+        // 滚动进度条
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+            const header = document.querySelector('header');
+            if (winScroll > 50) { header.classList.add('shadow-lg'); header.classList.remove('border-b'); }
+            else { header.classList.remove('shadow-lg'); header.classList.add('border-b'); }
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        // 初始化动画状态
+        document.querySelectorAll('.fade-in').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        });
+        
+        // 自动保留agent参数到所有链接
+        function preserveAgentParameter() {
+            const agentId = getAgentIdFromUrl();
+            if (agentId && agentId !== 'default') {
+                // 获取页面上所有的链接
+                const links = document.querySelectorAll('a[href]');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    // 只处理内部链接（不处理mailto:、tel:、https://等外部链接）
+                    if (href && !href.startsWith('mailto:') && !href.startsWith('tel:') && 
+                        !href.startsWith('http://') && !href.startsWith('https://') &&
+                        !href.startsWith('#') && !href.startsWith('javascript:')) {
+                        // 检查链接是否已经有查询参数
+                        if (href.includes('?')) {
+                            // 如果已经有查询参数，检查是否已有agent参数
+                            if (!href.includes('agent=')) {
+                                link.setAttribute('href', href + '&agent=' + agentId);
+                            }
+                        } else {
+                            // 如果没有查询参数，添加agent参数
+                            link.setAttribute('href', href + '?agent=' + agentId);
+                        }
+                    }
+                });
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadContactConfig();
+            preserveAgentParameter();
+        });
+        
+        window.addEventListener('load', () => { window.dispatchEvent(new Event('scroll')); });
+    </script>
+</body>
+</html>

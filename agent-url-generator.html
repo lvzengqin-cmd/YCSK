@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服专属网址生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #1F2937;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #6B7280;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #F9FAFB;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result-title {
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .url-item {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .url-text {
+            flex: 1;
+            word-break: break-all;
+            color: #667eea;
+            font-size: 14px;
+        }
+        
+        .copy-btn {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: #5a67d8;
+        }
+        
+        .copy-btn.copied {
+            background: #10B981;
+        }
+        
+        .page-name {
+            color: #6B7280;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 客服专属网址生成器</h1>
+        <p class="subtitle">输入客服ID，一键生成所有专属网址</p>
+        
+        <div class="form-group">
+            <label for="agentId">客服ID</label>
+            <input type="text" id="agentId" placeholder="例如：xiaowang、xiaozhang、xiaoli">
+        </div>
+        
+        <button class="generate-btn" onclick="generateUrls()">生成专属网址</button>
+        
+        <div class="result" id="result">
+            <div class="result-title">📋 客服专属网址列表</div>
+            
+            <div class="url-item">
+                <div>
+                    <div class="page-name">首页</div>
+                    <div class="url-text" id="homeUrl"></div>
+                </div>
+                <button class="copy-btn" onclick="copyUrl('homeUrl')">复制</button>
+            </div>
+            
+            <div class="url-item">
+                <div>
+                    <div class="page-name">白皮书</div>
+                    <div class="url-text" id="baipishuUrl"></div>
+                </div>
+                <button class="copy-btn" onclick="copyUrl('baipishuUrl')">复制</button>
+            </div>
+            
+            <div class="url-item">
+                <div>
+                    <div class="page-name">用户手册</div>
+                    <div class="url-text" id="shouceUrl"></div>
+                </div>
+                <button class="copy-btn" onclick="copyUrl('shouceUrl')">复制</button>
+            </div>
+            
+            <div class="url-item">
+                <div>
+                    <div class="page-name">付款页面</div>
+                    <div class="url-text" id="paymentUrl"></div>
+                </div>
+                <button class="copy-btn" onclick="copyUrl('paymentUrl')">复制</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const baseUrl = 'https://www.yucebot.com';
+        
+        function generateUrls() {
+            const agentId = document.getElementById('agentId').value.trim();
+            
+            if (!agentId) {
+                alert('请输入客服ID！');
+                return;
+            }
+            
+            document.getElementById('homeUrl').textContent = `${baseUrl}/index.html?agent=${agentId}`;
+            document.getElementById('baipishuUrl').textContent = `${baseUrl}/baipishu.html?agent=${agentId}`;
+            document.getElementById('shouceUrl').textContent = `${baseUrl}/shouce.html?agent=${agentId}`;
+            document.getElementById('paymentUrl').textContent = `${baseUrl}/payment.html?agent=${agentId}`;
+            
+            document.getElementById('result').classList.add('show');
+        }
+        
+        function copyUrl(elementId) {
+            const urlText = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(urlText).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '已复制！';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                alert('复制失败，请手动复制');
+            });
+        }
+        
+        document.getElementById('agentId').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateUrls();
+            }
+        });
+    </script>
+</body>
+</html>

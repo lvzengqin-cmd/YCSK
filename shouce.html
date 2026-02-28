@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>昱策事件合约全自动开单机器人用户手册</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#0FC6C2',
+                        success: '#00B578',
+                        danger: '#F53F3F',
+                        warning: '#FF7D00',
+                        dark: '#111827',
+                        'dark-light': '#1F2937',
+                        'dark-lighter': '#374151'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+            }
+            .gradient-border {
+                position: relative;
+                border-radius: 0.5rem;
+                z-index: 0;
+            }
+            .gradient-border::before {
+                content: "";
+                position: absolute;
+                inset: -2px;
+                border-radius: 0.6rem;
+                background: linear-gradient(135deg, #165DFF, #0FC6C2);
+                z-index: -1;
+            }
+        }
+    </style>
+    
+    <style>
+        /* 导入现代无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(22, 93, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(15, 198, 194, 0.05) 0%, transparent 20%);
+        }
+        
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748B;
+        }
+        
+        /* 动画效果 */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 进度指示器 */
+        .progress-container {
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            position: fixed;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .progress-bar {
+            height: 3px;
+            background: linear-gradient(90deg, #165DFF, #0FC6C2);
+            width: 0%;
+        }
+        
+        /* 浮动客服按钮 */
+        .floating-chat {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #165DFF 0%, #0FC6C2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
+            animation: pulse 2s infinite;
+            transition: transform 0.3s;
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(22, 93, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(22, 93, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(22, 93, 255, 0); }
+        }
+        
+        .chat-popup {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: #1F2937;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            min-width: 250px;
+            display: none;
+            border: 1px solid #374151;
+        }
+        
+        .chat-popup.show {
+            display: block;
+        }
+        
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #374151;
+        }
+        
+        .chat-header h4 {
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .close-chat {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #9CA3AF;
+        }
+        
+        .contact-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .contact-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            transition: background 0.3s;
+        }
+        
+        .contact-option:hover {
+            background: #374151;
+        }
+        
+        .contact-option i {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+        
+        .qq-icon { color: #00a8ff; }
+        .wechat-icon { color: #2ecc71; }
+        .telegram-icon { color: #00aced; }
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+    <!-- 进度条 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <header class="sticky top-0 bg-dark/80 backdrop-blur-md z-40 border-b border-gray-800 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-robot text-primary text-2xl mr-3"></i>
+                    <span class="text-xl font-semibold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">昱策事件合约机器人</span>
+                </div>
+                
+                <!-- 桌面导航 -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#manual-intro" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">手册说明</a>
+                    <a href="#preparation" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">准备工作</a>
+                    <a href="#deploy-step" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">部署步骤</a>
+                    <a href="#function-op" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">功能操作</a>
+                    <a href="#notes" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">注意事项</a>
+                    <a href="#faq" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">常见问题</a>
+                    <a href="#support" class="text-gray-300 hover:text-primary transition-colors text-sm font-medium">技术支持</a>
+                    <a href="./baipishu.html" class="text-primary font-semibold">白皮书</a>
+                    <a href="./index.html" class="text-gray-300 hover:text-primary transition-colors flex items-center" title="返回首页">
+                        <i class="fas fa-home text-lg"></i>
+                        <span class="ml-2 text-sm">首页</span>
+                    </a>
+                </nav>
+                
+                <!-- 移动端菜单按钮 -->
+                <div class="md:hidden">
+                    <button id="menuBtn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobileMenu" class="hidden md:hidden bg-dark-light border-b border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#manual-intro" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">手册说明</a>
+                <a href="#preparation" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">准备工作</a>
+                <a href="#deploy-step" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">部署步骤</a>
+                <a href="#function-op" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">功能操作</a>
+                <a href="#notes" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">注意事项</a>
+                <a href="#faq" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">常见问题</a>
+                <a href="#support" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">技术支持</a>
+                <a href="./baipishu.html" class="block px-3 py-2 text-primary rounded-md text-base font-semibold transition-colors">白皮书</a>
+                <a href="./index.html" class="block px-3 py-2 text-gray-300 hover:bg-dark-lighter hover:text-primary rounded-md text-base font-medium transition-colors">返回首页</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主横幅 -->
+    <div class="relative bg-gradient-to-r from-dark-light to-dark py-16 md:py-24 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-primary blur-3xl"></div>
+            <div class="absolute -left-20 -bottom-20 w-96 h-96 rounded-full bg-secondary blur-3xl"></div>
+        </div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text leading-tight">
+                    昱策事件合约全自动开单机器人
+                </h1>
+                <p class="text-xl text-gray-300 mb-8">
+                    专业用户手册 - 高效部署与安全操作指南
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#preparation" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                        开始使用 <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="./index.html" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-secondary hover:bg-secondary/90 transition-colors shadow-lg shadow-secondary/20">
+                        <i class="fas fa-home mr-2"></i> 返回首页
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主体内容 -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- 一、手册说明 -->
+        <section id="manual-intro" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-book text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">一、手册说明</h2>
+            </div>
+            
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                <p class="text-gray-300 leading-relaxed">
+                    本手册旨在指导用户完成机器人的部署、操作与日常维护，帮助用户快速上手并安全使用产品。请在使用前完整阅读本手册，尤其是 
+                    <span class="inline-block px-2 py-1 bg-warning/20 text-warning rounded-md text-sm font-medium ml-1">风险控制</span> 
+                    与 
+                    <span class="inline-block px-2 py-1 bg-warning/20 text-warning rounded-md text-sm font-medium ml-1">注意事项</span> 
+                    章节，避免因操作不当或认知偏差引发问题。
+                </p>
+            </div>
+        </section>
+
+        <!-- 二、准备工作 -->
+        <section id="preparation" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-list-check text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">二、准备工作</h2>
+            </div>
+            
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl mb-6">
+                <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                    <i class="fas fa-mobile-alt text-secondary mr-3"></i>
+                    1. 设备要求
+                </h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            <span class="font-medium text-white">硬件：</span>
+                            1台安卓设备（除华为手机/平板均可），建议运行内存≥4GB，存储空间≥10GB，避免设备卡顿影响信号响应效率
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            <span class="font-medium text-white">系统：</span>
+                            Android 8.0及以上版本（低于此版本可能出现兼容性问题，建议提前升级设备系统）
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            <span class="font-medium text-white">网络：</span>
+                            稳定的Wi-Fi或4G/5G网络（网络延迟过高可能导致信号执行滞后）；
+                            <span class="inline-block px-2 py-0.5 bg-info/20 text-info rounded-md text-xs font-medium ml-1">国内用户需全程开启VPN</span>
+                            以保障行情数据与信号传输稳定，海外用户无需额外操作
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl mb-6">
+                <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                    <i class="fas fa-laptop-code text-secondary mr-3"></i>
+                    2. 软件与账号准备
+                </h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            安装币安APP（务必从币安官方官网或应用商店下载正版，切勿使用第三方渠道的盗版软件，防止账号信息泄露）
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            注册并实名认证币安账号（需完成KYC认证，未完成认证将无法开通合约交易权限，建议提前完成身份核验）
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            开通币安合约交易权限（打开币安APP→进入"合约"板块→按照页面提示完成风险测评，测评通过后即可开通权限）
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            准备机器人脚本安装包：由我方服务人员统一发送至客户指定邮箱/聊天账号，或根据客户需求提供远程安装调试服务，
+                            <span class="inline-block px-2 py-0.5 bg-success/20 text-success rounded-md text-xs font-medium ml-1">无需客户自行获取</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                    <i class="fas fa-money-bill-wave text-secondary mr-3"></i>
+                    3. 资金准备
+                </h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            币安账号内需储备充足保证金（建议初始保证金不低于100USDT，避免因资金不足导致无法正常开单）
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            <span class="inline-block px-2 py-0.5 bg-info/20 text-info rounded-md text-xs font-medium">准备资金建议为单次开单金额的5-10倍</span>
+                            ，以应对行情波动及可能的连损情况，保障账户资金安全
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            提前熟悉币安事件合约交易规则（包括盈利/亏损机制、时间周期条件等，避免因不熟悉规则引发不必要的损失）
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 三、机器人部署步骤 -->
+        <section id="deploy-step" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-cogs text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">三、机器人部署步骤</h2>
+            </div>
+            
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl mb-6">
+                <p class="text-gray-300 mb-6">
+                    全自动用户付费后，机器人部署提供两种免费服务形式，客户可根据自身需求选择，
+                    <span class="inline-block px-2 py-0.5 bg-success/20 text-success rounded-md text-xs font-medium ml-1">均不额外收取费用</span>：
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- 形式1：自主部署 -->
+                    <div class="bg-dark rounded-xl overflow-hidden border border-gray-800 shadow-lg card-hover">
+                        <div class="bg-gradient-to-r from-primary/20 to-secondary/20 px-6 py-4 border-b border-gray-800">
+                            <h3 class="text-lg font-semibold text-white">形式1：用户自主部署（含视频教程支持）</h3>
+                        </div>
+                        <div class="p-5">
+                            <ol class="space-y-4 text-gray-300">
+                                <li class="flex">
+                                    <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm mr-3 mt-0.5">1</div>
+                                    <p>获取部署资料：我方服务人员将机器人脚本安装包（.apk格式）及详细的安装调试视频教程，发送至客户指定渠道（如微信、邮箱）</p>
+                                </li>
+                                <li class="flex">
+                                    <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm mr-3 mt-0.5">2</div>
+                                    <p>参考教程安装：客户对照视频教程，在安卓设备上完成安装操作（教程将同步讲解"未知来源应用安装""无障碍"等权限开启、基础权限授权等关键步骤，确保新手也能顺利操作）</p>
+                                </li>
+                                <li class="flex">
+                                    <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm mr-3 mt-0.5">3</div>
+                                    <p>调试确认：安装完成后，若遇到操作疑问，可随时联系我方服务人员，提供1对1远程指导，直至机器人可正常启动</p>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- 形式2：远程部署 -->
+                    <div class="bg-dark rounded-xl overflow-hidden border border-gray-800 shadow-lg card-hover">
+                        <div class="bg-gradient-to-r from-primary/20 to-secondary/20 px-6 py-4 border-b border-gray-800">
+                            <h3 class="text-lg font-semibold text-white">形式2：服务人员远程部署（全程代操作）</h3>
+                        </div>
+                        <div class="p-5">
+                            <ol class="space-y-4 text-gray-300">
+                                <li class="flex">
+                                    <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm mr-3 mt-0.5">1</div>
+                                    <p>预约服务：客户与我方服务人员协商合适的远程服务时间（支持工作日11:00-23:00，周末可灵活预约）</p>
+                                </li>
+                                <li class="flex">
+                                    <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm mr-3 mt-0.5">2</div>
+                                    <p>远程协助：客户通过ToDesk、向日葵等远程工具，授权服务人员访问安卓设备或电脑端协助操作</p>
+                                </li>
+                                <li class="flex">
+                                    <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm mr-3 mt-0.5">3</div>
+                                    <p>全程代部署：服务人员完成脚本安装、权限授权、交易参数初始设置等全流程操作</p>
+                                </li>
+                                <li class="flex">
+                                    <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm mr-3 mt-0.5">4</div>
+                                    <p>确认与教学：部署完成后，服务人员将向客户演示机器人启动、信号查看等基础操作，确保客户理解核心功能使用方法</p>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 四、机器人功能操作 -->
+        <section id="function-op" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-rocket text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">四、机器人功能操作</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                        <i class="fas fa-signal text-secondary mr-3"></i>
+                        1. 实时信号查看
+                    </h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                首页"系统日志"板块实时显示当前推送信号，包含开单时间、信号周期、建议方向（多/空）等信息，客户可同步对照电报群内的实时信号记录，实现信号双重验证，确保信息一致
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                信号推送后，机器人将在
+                                <span class="inline-block px-2 py-0.5 bg-info/20 text-info rounded-md text-xs font-medium ml-1">5秒内完成开单操作</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                        <i class="fas fa-history text-secondary mr-3"></i>
+                        2. 交易记录查询
+                    </h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                进入币安APP"交易历史"页面，可按时间维度筛选（今日/昨天/1月）查看所有历史交易记录，单条记录可查看详细信息（包括交易品种、开单时间、交易方向、开单金额、平仓收益等）
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                        <i class="fas fa-toggle-on text-secondary mr-3"></i>
+                        3. 机器人控制
+                    </h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                机器人运行中，点击脚本软件内右上角的"开关"按钮即可暂停交易（按钮将变为灰色"已暂停"状态），暂停后不再响应新推送的信号，但已开单的订单仍会正常执行止盈/止损操作
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                若需修改交易参数（如开单金额等），需先暂停机器人，点击对应的脚本，在金额修改选项中修改完成并确认无误后进行保存，重新点击"启动机器人"恢复运行
+                            </div>
+                        </li>
+                        <li class="flex items-start mt-4">
+                            <div class="bg-danger/10 border-l-4 border-danger p-3 rounded-r w-full">
+                                <p class="text-danger text-sm flex items-start">
+                                    <i class="fas fa-exclamation-triangle mr-2 mt-0.5"></i>
+                                    若超过24小时不使用机器人，建议关闭程序，同时将合约账户资金划转为零，避免下次开启脚本时历史信号叠加触发，造成账户资金损失
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                        <i class="fas fa-sliders-h text-secondary mr-3"></i>
+                        4. 参数修改
+                    </h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                暂停机器人后，进入指定的脚本设置页面，可调整交易品种、交易周期、单次开单金额等参数
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                建议脚本修改后，先以小额资金测试1-2单（如单次开单金额设置为5-10USDT），确认适配当前行情、机器人运行正常后，再恢复常规开单金额
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 五、注意事项 -->
+        <section id="notes" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-exclamation-circle text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">五、注意事项</h2>
+            </div>
+            
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl mb-6">
+                <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                    <i class="fas fa-shield-alt text-secondary mr-3"></i>
+                    1. 安全防护
+                </h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start mt-2">
+                        <div class="bg-danger/10 border-l-4 border-danger p-3 rounded-r w-full">
+                            <p class="text-danger text-sm flex items-start">
+                                <i class="fas fa-exclamation-triangle mr-2 mt-0.5"></i>
+                                切勿向他人泄露API密钥、账号密码等信息（我方官方人员不会以任何理由索要上述信息，谨防诈骗）
+                            </p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            安卓设备建议安装正规杀毒软件，定期进行病毒扫描，避免感染恶意软件导致账号信息或交易数据泄露
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            禁止在公共设备（如网吧电脑、共享手机、他人设备）上安装机器人或登录币安账号，保障账户安全
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl mb-6">
+                <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                    <i class="fas fa-exclamation-triangle text-secondary mr-3"></i>
+                    2. 风险控制
+                </h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start mt-2">
+                        <div class="bg-danger/10 border-l-4 border-danger p-3 rounded-r w-full">
+                            <p class="text-danger text-sm flex items-start">
+                                <i class="fas fa-exclamation-triangle mr-2 mt-0.5"></i>
+                                严格控制开单金额，不建议使用单次信号连续开单的方式，叠单会放大行情波动带来的风险，极易导致账户亏损
+                            </p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            遵循"平推"（每单开单金额相同）的原则，避免赚小亏大
+                        </div>
+                    </li>
+                    <li class="flex items-start mt-2">
+                        <div class="bg-danger/10 border-l-4 border-danger p-3 rounded-r w-full">
+                            <p class="text-danger text-sm flex items-start">
+                                <i class="fas fa-exclamation-triangle mr-2 mt-0.5"></i>
+                                当行情出现异常波动（如短时间内暴涨暴跌、成交量骤增）时，建议划转合约账户资金、暂停机器人运行，手动判断行情趋势后再决定是否重启
+                            </p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                        <div>
+                            建议准备开单金额5倍以上的账户资金应对市场突发情况
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                        <i class="fas fa-tools text-secondary mr-3"></i>
+                        3. 日常维护
+                    </h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                确保安卓设备电量充足，建议当设备电量低于20%时及时充电，避免因设备关机导致机器人停止运行，错过信号执行
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                定期清理设备后台进程，关闭不必要的应用程序，避免其他软件占用过多系统资源，影响机器人信号响应速度
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                关注电报群及官方通知（实时更新版本优化、策略调整等信息）
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                若设备出现卡顿、闪退等问题，可先重启设备后重新启动机器人；若问题仍未解决，及时联系我方技术支持，
+                                <span class="inline-block px-2 py-0.5 bg-warning/20 text-warning rounded-md text-xs font-medium ml-1">切勿自行修改脚本文件</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                    <h3 class="flex items-center text-xl font-semibold text-white mb-4">
+                        <i class="fas fa-chart-line text-secondary mr-3"></i>
+                        4. 市场认知
+                    </h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                机器人信号基于历史市场数据与算法模型分析生成，无法预测突发市场事件（如政策监管调整、平台重要公告、宏观经济变动等），存在信号失效风险
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                            <div>
+                                月胜率70%-80%不代表"每单必赚"，实际交易中仍可能出现连损情况（目前最大连损记录为4单），需理性看待盈利与亏损，避免过度依赖机器人
+                            </div>
+                        </li>
+                        <li class="flex items-start mt-2">
+                            <div class="bg-danger/10 border-l-4 border-danger p-3 rounded-r w-full">
+                                <p class="text-danger text-sm flex items-start">
+                                    <i class="fas fa-exclamation-triangle mr-2 mt-0.5"></i>
+                                    加密货币合约交易属于高风险投资品类，建议仅使用"闲置资金"参与交易，不建议通过借贷、挪用生活资金等方式获取交易资金，确保投资行为不影响正常生活
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 六、常见问题（FAQ） -->
+        <section id="faq" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-question-circle text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">六、常见问题（FAQ）</h2>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="bg-dark-light rounded-xl overflow-hidden border border-gray-800 shadow-xl">
+                    <button class="faq-toggle w-full flex items-center justify-between p-6 text-left focus:outline-none">
+                        <h3 class="flex items-center text-xl font-semibold text-white">
+                            <i class="fas fa-question-circle text-secondary mr-3"></i>
+                            1. 机器人启动后没有推送信号？
+                        </h3>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content px-6 pb-6 hidden">
+                        <ul class="space-y-3 text-gray-300 ml-9">
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <div>
+                                    检查"参数设置"中是否已勾选脚本组合（未勾选任何脚本将导致无信号生成，需至少勾选1套脚本）
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <div>
+                                    查看电报群是否有信号推送（机器人自动做单信号与电报群信号是同步推送的）
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <div>
+                                    确认设备网络和VPN连接正常（可切换Wi-Fi与4G/5G网络测试，网络中断会导致无法获取行情数据，进而无法推送信号）
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-dark-light rounded-xl overflow-hidden border border-gray-800 shadow-xl">
+                    <button class="faq-toggle w-full flex items-center justify-between p-6 text-left focus:outline-none">
+                        <h3 class="flex items-center text-xl font-semibold text-white">
+                            <i class="fas fa-question-circle text-secondary mr-3"></i>
+                            2. 月胜率未达到70%-80%，怎么办？
+                        </h3>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content px-6 pb-6 hidden">
+                        <ul class="space-y-3 text-gray-300 ml-9">
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <div>
+                                    胜率统计以"月度"为周期，单周或单日胜率出现波动属于正常情况，无需频繁调整交易参数
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <div>
+                                    若连续2周胜率低于60%，可联系我方技术支持，提供近期交易记录，获取针对性的策略优化建议
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-dark-light rounded-xl overflow-hidden border border-gray-800 shadow-xl">
+                    <button class="faq-toggle w-full flex items-center justify-between p-6 text-left focus:outline-none">
+                        <h3 class="flex items-center text-xl font-semibold text-white">
+                            <i class="fas fa-question-circle text-secondary mr-3"></i>
+                            3. 机器人闪退/无法启动？
+                        </h3>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content px-6 pb-6 hidden">
+                        <ul class="space-y-3 text-gray-300 ml-9">
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <div>
+                                    检查设备系统版本是否满足要求（需Android 8.0及以上版本，低于此版本需升级设备系统后重新尝试）
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <div>
+                                    将机器人软件、币安、VPN软件后台进行锁定，使其无法被系统后台省电模式关闭；同时在设置中开启相关应用权限
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary mt-1.5 mr-3"></i>
+                                <div>
+                                    卸载旧版本后重新安装（从我方服务人员提供的官方渠道获取最新安装包，避免使用旧版本导致兼容性问题）
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 七、技术支持 -->
+        <section id="support" class="mb-16 fade-in">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <i class="fas fa-headphones text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">七、技术支持</h2>
+            </div>
+            
+            <div class="bg-dark-light rounded-xl p-6 border border-gray-800 shadow-xl">
+                <p class="text-gray-300 mb-6">
+                    若遇到手册中未提及的问题，可通过以下方式联系我方技术支持：
+                </p>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="gradient-border bg-dark p-6 rounded-lg card-hover">
+                        <div class="text-secondary text-4xl mb-4">
+                            <i class="fab fa-telegram-plane"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">官方电报</h3>
+                        <div class="space-y-2 text-gray-300">
+                            <p class="flex items-center">
+                                <i class="fas fa-user-circle text-primary mr-2"></i>
+                                @QJDF77
+                            </p>
+                        </div>
+                        <p class="text-gray-400 text-sm mt-4">
+                            24小时内回复，建议附上问题截图与设备信息
+                        </p>
+                    </div>
+                    
+                    <div class="gradient-border bg-dark p-6 rounded-lg card-hover">
+                        <div class="text-secondary text-4xl mb-4">
+                            <i class="fab fa-qq"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">官方客服QQ</h3>
+                        <div class="space-y-2 text-gray-300">
+                            <p class="flex items-center">
+                                <i class="fas fa-user-circle text-primary mr-2"></i>
+                                23558335
+                            </p>
+                        </div>
+                        <p class="text-gray-400 text-sm mt-4">
+                            备注"机器人用户"加入交流群，获取实时解答
+                        </p>
+                    </div>
+                    
+                    <div class="gradient-border bg-dark p-6 rounded-lg card-hover">
+                        <div class="text-secondary text-4xl mb-4">
+                            <i class="fab fa-weixin"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">官方微信</h3>
+                        <div class="space-y-2 text-gray-300">
+                            <p class="flex items-center">
+                                <i class="fas fa-user-circle text-primary mr-2"></i>
+                                ZNHK88
+                            </p>
+                        </div>
+                        <p class="text-gray-400 text-sm mt-4">
+                            添加时备注"机器人用户"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 底部风险提示 -->
+        <div class="bg-danger/10 border border-danger/30 rounded-xl p-6 shadow-lg fade-in">
+            <p class="text-danger flex items-start">
+                <i class="fas fa-exclamation-triangle text-2xl mr-4 mt-1"></i>
+                <span>风险提示：加密货币合约交易存在价格剧烈波动、杠杆风险等不确定性，可能导致重大损失。本产品信号仅为交易参考，不构成投资建议，请投资者结合自身风险承受能力独立决策，对自身交易行为负责。</span>
+            </p>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark border-t border-gray-800 py-8 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center">
+                        <i class="fas fa-robot text-primary text-2xl mr-3"></i>
+                        <span class="text-xl font-semibold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">昱策事件合约机器人</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mt-2">专业的加密货币自动交易解决方案</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-telegram-plane text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-qq text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-weixin text-xl"></i>
+                    </a>
+                    <a href="./index.html" class="text-gray-400 hover:text-primary transition-colors inline-flex items-center">
+                        <i class="fas fa-home text-xl"></i>
+                        <span class="ml-2 text-sm">返回首页</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-6 pt-6 text-center text-gray-500 text-sm">
+                <p>© 2026 昱策事件合约机器人. 保留所有权利.</p>
+                <p class="mt-1">加密货币交易有风险，投资需谨慎</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 浮动客服按钮 -->
+    <div class="floating-chat">
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-header">
+                <h4>联系客服</h4>
+                <button class="close-chat" onclick="closeChat()">&times;</button>
+            </div>
+            <div class="contact-options">
+                <a href="#" class="contact-option" id="qqLink">
+                    <i class="fab fa-qq qq-icon"></i>
+                    <span class="contact-text">加载中...</span>
+                </a>
+                <a href="#" class="contact-option" id="wechatLink">
+                    <i class="fab fa-weixin wechat-icon"></i>
+                    <span class="contact-text">加载中...</span>
+                </a>
+                <a href="#" class="contact-option" id="telegramLink">
+                    <i class="fab fa-telegram telegram-icon"></i>
+                    <span class="contact-text">加载中...</span>
+                </a>
+            </div>
+        </div>
+        <div class="chat-button" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+    <script>
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 点击移动端菜单项后关闭菜单
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        
+        // 滚动进度条
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+            
+            const header = document.querySelector('header');
+            if (winScroll > 50) {
+                header.classList.add('shadow-lg');
+                header.classList.remove('border-b');
+            } else {
+                header.classList.remove('shadow-lg');
+                header.classList.add('border-b');
+            }
+            
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        
+        // 初始化动画状态
+        document.querySelectorAll('.fade-in').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        });
+        
+        window.addEventListener('load', () => {
+            window.dispatchEvent(new Event('scroll'));
+        });
+        
+        // FAQ 折叠功能
+        document.querySelectorAll('.faq-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                content.classList.toggle('hidden');
+                const icon = button.querySelector('i');
+                if (content.classList.contains('hidden')) {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                } else {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                }
+            });
+        });
+        
+        // 浮动客服功能
+        function toggleChat() {
+            const popup = document.getElementById('chatPopup');
+            popup.classList.toggle('show');
+        }
+        
+        function closeChat() {
+            document.getElementById('chatPopup').classList.remove('show');
+        }
+        
+        // 点击外部关闭客服窗口
+        document.addEventListener('click', function(e) {
+            const chatButton = document.querySelector('.chat-button');
+            const chatPopup = document.getElementById('chatPopup');
+            if (!chatButton.contains(e.target) && !chatPopup.contains(e.target)) {
+                chatPopup.classList.remove('show');
+            }
+        });
+        
+        // 从URL参数中获取客服ID
+        function getAgentIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('agent') || 'default';
+        }
+
+        // 加载动态客服配置（支持多客服）
+        async function loadContactConfig() {
+            try {
+                const agentId = getAgentIdFromUrl();
+                let config;
+                
+                try {
+                    // 先尝试从folder模式加载客服
+                    try {
+                        const agentResponse = await fetch(`data/agents/${agentId}.json`);
+                        config = await agentResponse.json();
+                        console.log(`已从folder模式加载客服: ${agentId}`);
+                    } catch (agentError) {
+                        console.warn(`无法从folder模式加载客服 ${agentId}，尝试从agents.json加载:`, agentError);
+                        // 尝试从agents.json加载
+                        const agentsResponse = await fetch('data/agents.json');
+                        const agentsData = await agentsResponse.json();
+                        
+                        if (agentsData[agentId]) {
+                            config = agentsData[agentId];
+                            console.log(`已从agents.json加载客服: ${agentId}`);
+                        } else {
+                            console.warn(`客服 ${agentId} 不存在，使用默认客服`);
+                            config = agentsData['default'] || {};
+                        }
+                    }
+                } catch (agentsError) {
+                    // 如果agents.json加载失败，回退到contact.json
+                    console.warn('无法加载客服配置，回退到contact.json:', agentsError);
+                    const contactResponse = await fetch('data/contact.json');
+                    config = await contactResponse.json();
+                }
+                
+                // 更新页面中的客服链接（同时兼容两种数据格式）
+                const telegramUrl = config.telegram_url || config.telegramUrl || 'https://t.me/QJDF77';
+                const telegramHandle = config.telegram_handle || config.telegramHandle || '@QJDF77';
+                const qqUrl = config.qq_url || config.qqUrl || 'https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes';
+                const qqNumber = config.qq_number || config.qqNumber || '23558335';
+                const wechatUrl = config.wechat_url || config.wechatUrl || 'weixin://dl/chat?yucekefu01';
+                const wechatId = config.wechat_id || config.wechatId || 'yucekefu01';
+                
+                // 更新浮动客服面板（先更新，避免被DOM修改影响）
+                const qqLink = document.getElementById('qqLink');
+                qqLink.href = qqUrl;
+                qqLink.querySelector('.contact-text').textContent = `QQ: ${qqNumber}`;
+                
+                const wechatLink = document.getElementById('wechatLink');
+                wechatLink.href = wechatUrl;
+                wechatLink.querySelector('.contact-text').textContent = `微信: ${wechatId}`;
+                
+                const telegramLink = document.getElementById('telegramLink');
+                telegramLink.href = telegramUrl;
+                telegramLink.querySelector('.contact-text').textContent = `Telegram: ${telegramHandle}`;
+                
+                // 更新技术支持部分
+                const supportSection = document.querySelector('#support .grid');
+                if (supportSection) {
+                    supportSection.innerHTML = `
+                        <div class="gradient-border bg-dark p-6 rounded-lg card-hover">
+                            <div class="text-secondary text-4xl mb-4">
+                                <i class="fab fa-telegram-plane"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-white mb-3">官方电报</h3>
+                            <div class="space-y-2 text-gray-300">
+                                <p class="flex items-center">
+                                    <i class="fas fa-user-circle text-primary mr-2"></i>
+                                    ${telegramHandle}
+                                </p>
+                            </div>
+                            <p class="text-gray-400 text-sm mt-4">
+                                24小时内回复，建议附上问题截图与设备信息
+                            </p>
+                        </div>
+                        
+                        <div class="gradient-border bg-dark p-6 rounded-lg card-hover">
+                            <div class="text-secondary text-4xl mb-4">
+                                <i class="fab fa-qq"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-white mb-3">官方客服QQ</h3>
+                            <div class="space-y-2 text-gray-300">
+                                <p class="flex items-center">
+                                    <i class="fas fa-user-circle text-primary mr-2"></i>
+                                    ${qqNumber}
+                                </p>
+                            </div>
+                            <p class="text-gray-400 text-sm mt-4">
+                                备注"机器人用户"加入交流群，获取实时解答
+                            </p>
+                        </div>
+                        
+                        <div class="gradient-border bg-dark p-6 rounded-lg card-hover">
+                            <div class="text-secondary text-4xl mb-4">
+                                <i class="fab fa-weixin"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-white mb-3">官方微信</h3>
+                            <div class="space-y-2 text-gray-300">
+                                <p class="flex items-center">
+                                    <i class="fas fa-user-circle text-primary mr-2"></i>
+                                    ${wechatId}
+                                </p>
+                            </div>
+                            <p class="text-gray-400 text-sm mt-4">
+                                添加时备注"机器人用户"
+                            </p>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.warn('无法加载客服配置，使用默认值:', error);
+                // 使用默认值
+                document.getElementById('qqLink').href = 'https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes';
+                document.getElementById('wechatLink').href = 'weixin://dl/chat?ZNHK88';
+                document.getElementById('telegramLink').href = 'https://t.me/QJDF77';
+            }
+        }
+
+        // 浮动客服功能
+        function toggleChat() {
+            const popup = document.getElementById('chatPopup');
+            popup.classList.toggle('show');
+        }
+        
+        function closeChat() {
+            document.getElementById('chatPopup').classList.remove('show');
+        }
+        
+        // 点击外部关闭客服窗口
+        document.addEventListener('click', function(e) {
+            const chatButton = document.querySelector('.chat-button');
+            const chatPopup = document.getElementById('chatPopup');
+            if (!chatButton.contains(e.target) && !chatPopup.contains(e.target)) {
+                chatPopup.classList.remove('show');
+            }
+        });
+
+        // 自动保留agent参数到所有链接
+        function preserveAgentParameter() {
+            const agentId = getAgentIdFromUrl();
+            if (agentId && agentId !== 'default') {
+                // 获取页面上所有的链接
+                const links = document.querySelectorAll('a[href]');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    // 只处理内部链接（不处理mailto:、tel:、https://等外部链接）
+                    if (href && !href.startsWith('mailto:') && !href.startsWith('tel:') && 
+                        !href.startsWith('http://') && !href.startsWith('https://') &&
+                        !href.startsWith('#') && !href.startsWith('javascript:')) {
+                        // 检查链接是否已经有查询参数
+                        if (href.includes('?')) {
+                            // 如果已经有查询参数，检查是否已有agent参数
+                            if (!href.includes('agent=')) {
+                                link.setAttribute('href', href + '&agent=' + agentId);
+                            }
+                        } else {
+                            // 如果没有查询参数，添加agent参数
+                            link.setAttribute('href', href + '?agent=' + agentId);
+                        }
+                    }
+                });
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadContactConfig();
+            preserveAgentParameter();
+        });
+    </script>
+</body>
+</html>

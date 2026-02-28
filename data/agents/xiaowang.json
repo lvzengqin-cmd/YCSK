@@ -1,0 +1,11 @@
+{
+  "id": "xiaowang",
+  "qq_number": "小王QQ号",
+  "qq_url": "https://wpa.qq.com/msgrd?v=3&uin=小王QQ号&site=qq&menu=yes",
+  "wechat_id": "小王微信",
+  "wechat_url": "weixin://dl/chat?小王微信",
+  "telegram_handle": "@小王电报",
+  "telegram_url": "https://t.me/小王电报",
+  "usdt_address": "小王USDT地址",
+  "bnid_address": "小王BNID地址"
+}

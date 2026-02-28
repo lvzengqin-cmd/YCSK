@@ -1,0 +1,11 @@
+{
+  "id": "xiaozhang",
+  "qq_number": "小张QQ号",
+  "qq_url": "https://wpa.qq.com/msgrd?v=3&uin=小张QQ号&site=qq&menu=yes",
+  "wechat_id": "小张微信",
+  "wechat_url": "weixin://dl/chat?小张微信",
+  "telegram_handle": "@小张电报",
+  "telegram_url": "https://t.me/小张电报",
+  "usdt_address": "小张USDT地址",
+  "bnid_address": "小张BNID地址"
+}

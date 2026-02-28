@@ -1,0 +1,32 @@
+{
+  "default": {
+    "qq_number": "23558335",
+    "qq_url": "https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes",
+    "wechat_id": "ZNHK88",
+    "wechat_url": "weixin://dl/chat?ZNHK88",
+    "telegram_handle": "@QJDF77",
+    "telegram_url": "https://t.me/QJDF77",
+    "usdt_address": "0x0bb1ddf4beb12e2a106f215a579ab6cba0794b62",
+    "bnid_address": "1059044975"
+  },
+  "xiaowang": {
+    "qq_number": "小王QQ号",
+    "qq_url": "https://wpa.qq.com/msgrd?v=3&uin=小王QQ号&site=qq&menu=yes",
+    "wechat_id": "小王微信",
+    "wechat_url": "weixin://dl/chat?小王微信",
+    "telegram_handle": "@小王电报",
+    "telegram_url": "https://t.me/小王电报",
+    "usdt_address": "小王USDT地址",
+    "bnid_address": "小王BNID地址"
+  },
+  "xiaozhang": {
+    "qq_number": "小张QQ号", 
+    "qq_url": "https://wpa.qq.com/msgrd?v=3&uin=小张QQ号&site=qq&menu=yes",
+    "wechat_id": "小张微信",
+    "wechat_url": "weixin://dl/chat?小张微信",
+    "telegram_handle": "@小张电报",
+    "telegram_url": "https://t.me/小张电报",
+    "usdt_address": "小张USDT地址",
+    "bnid_address": "小张BNID地址"
+  }
+}
