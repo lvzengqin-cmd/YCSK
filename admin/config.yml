@@ -12,7 +12,9 @@ collections:
     label: "客服配置"
     folder: "data/agents"
     create: true
-    slug: "{{fields.id}}"
+    slug: "{{fields.id}}.json"
+    extension: "json"
+    format: "json"
     identifier_field: "id"
     fields:
       - {label: "客服ID", name: "id", widget: "string", hint: "用于URL参数，如 xiaowang、xiaozhang、212403705"}
