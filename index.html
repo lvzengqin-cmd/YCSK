@@ -982,38 +982,40 @@
         async function loadContactConfig() {
             try {
                 const agentId = getAgentIdFromUrl();
+                const timestamp = new Date().getTime(); // 防止缓存
+                console.log('【客服加载】开始加载客服配置，agentId:', agentId);
                 let config;
                 
                 try {
                     // 先尝试从folder模式加载客服
-                    const agentResponse = await fetch(`data/agents/${agentId}.json`);
+                    const agentUrl = `data/agents/${agentId}.json?v=${timestamp}`;
+                    console.log('【客服加载】尝试加载:', agentUrl);
+                    const agentResponse = await fetch(agentUrl);
                     if (agentResponse.ok) {
                         config = await agentResponse.json();
-                        console.log(`已从folder模式加载客服: ${agentId}`, config);
+                        console.log('【客服加载】✅ 成功从文件加载客服:', agentId, config);
                     } else {
+                        console.error('【客服加载】❌ 文件加载失败，HTTP状态:', agentResponse.status);
                         throw new Error(`HTTP ${agentResponse.status}`);
                     }
                 } catch (agentError) {
-                    console.warn(`无法从folder模式加载客服 ${agentId}，尝试从agents.json加载:`, agentError);
+                    console.warn('【客服加载】⚠️ 从文件加载失败，尝试agents.json:', agentError.message);
                     try {
                         // 尝试从agents.json加载
-                        const agentsResponse = await fetch('data/agents.json');
+                        const agentsResponse = await fetch(`data/agents.json?v=${timestamp}`);
                         if (!agentsResponse.ok) throw new Error(`HTTP ${agentsResponse.status}`);
                         const agentsData = await agentsResponse.json();
                         
                         if (agentsData[agentId]) {
                             config = agentsData[agentId];
-                            console.log(`已从agents.json加载客服: ${agentId}`, config);
+                            console.log('【客服加载】✅ 从agents.json加载客服:', agentId);
                         } else {
-                            console.warn(`客服 ${agentId} 不存在，使用默认客服`);
+                            console.warn('【客服加载】⚠️ 客服不存在，使用默认客服');
                             config = agentsData['default'] || {};
                         }
                     } catch (agentsError) {
-                        // 如果agents.json加载失败，回退到contact.json
-                        console.warn('无法加载客服配置，回退到contact.json:', agentsError);
-                        const contactResponse = await fetch('data/contact.json');
-                        if (!contactResponse.ok) throw new Error(`HTTP ${contactResponse.status}`);
-                        config = await contactResponse.json();
+                        console.error('【客服加载】❌ agents.json加载失败:', agentsError.message);
+                        throw agentsError;
                     }
                 }
                 
