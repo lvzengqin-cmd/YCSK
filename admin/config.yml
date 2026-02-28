@@ -12,7 +12,7 @@ collections:
     label: "客服配置"
     folder: "data/agents"
     create: true
-    slug: "{{fields.id}}.json"
+    slug: "{{fields.id}}"
     extension: "json"
     format: "json"
     identifier_field: "id"
