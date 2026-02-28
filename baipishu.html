@@ -625,27 +625,41 @@
             return urlParams.get('agent') || 'default';
         }
 
+        // 获取基础路径（用于处理子目录情况）
+        function getBasePath() {
+            const path = window.location.pathname;
+            const filename = path.substring(path.lastIndexOf('/') + 1);
+            if (filename === '') {
+                return './';
+            }
+            return './';
+        }
+
         // 加载动态客服配置（支持多客服）
         async function loadContactConfig() {
             try {
                 const agentId = getAgentIdFromUrl();
+                const basePath = getBasePath();
+                console.log('正在加载客服配置，agentId:', agentId, 'basePath:', basePath);
                 let config;
                 
                 try {
                     // 先尝试从folder模式加载客服
                     try {
-                        const agentResponse = await fetch(`data/agents/${agentId}.json`);
+                        const agentResponse = await fetch(`${basePath}data/agents/${agentId}.json`);
+                        if (!agentResponse.ok) throw new Error(`HTTP error! status: ${agentResponse.status}`);
                         config = await agentResponse.json();
-                        console.log(`已从folder模式加载客服: ${agentId}`);
+                        console.log(`已从folder模式加载客服: ${agentId}`, config);
                     } catch (agentError) {
                         console.warn(`无法从folder模式加载客服 ${agentId}，尝试从agents.json加载:`, agentError);
                         // 尝试从agents.json加载
-                        const agentsResponse = await fetch('data/agents.json');
+                        const agentsResponse = await fetch(`${basePath}data/agents.json`);
+                        if (!agentsResponse.ok) throw new Error(`HTTP error! status: ${agentsResponse.status}`);
                         const agentsData = await agentsResponse.json();
                         
                         if (agentsData[agentId]) {
                             config = agentsData[agentId];
-                            console.log(`已从agents.json加载客服: ${agentId}`);
+                            console.log(`已从agents.json加载客服: ${agentId}`, config);
                         } else {
                             console.warn(`客服 ${agentId} 不存在，使用默认客服`);
                             config = agentsData['default'] || {};
@@ -654,7 +668,8 @@
                 } catch (agentsError) {
                     // 如果agents.json加载失败，回退到contact.json
                     console.warn('无法加载客服配置，回退到contact.json:', agentsError);
-                    const contactResponse = await fetch('data/contact.json');
+                    const contactResponse = await fetch(`${basePath}data/contact.json`);
+                    if (!contactResponse.ok) throw new Error(`HTTP error! status: ${contactResponse.status}`);
                     config = await contactResponse.json();
                 }
                 
@@ -703,10 +718,18 @@
                 
             } catch (error) {
                 console.warn('无法加载客服配置，使用默认值:', error);
-                // 使用默认值
-                document.getElementById('qqLink').href = 'https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes';
-                document.getElementById('wechatLink').href = 'weixin://dl/chat?ZNHK88';
-                document.getElementById('telegramLink').href = 'https://t.me/QJDF77';
+                // 使用默认值并更新显示
+                const qqLink = document.getElementById('qqLink');
+                qqLink.href = 'https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes';
+                qqLink.querySelector('.contact-text').textContent = 'QQ: 23558335';
+                
+                const wechatLink = document.getElementById('wechatLink');
+                wechatLink.href = 'weixin://dl/chat?ZNHK88';
+                wechatLink.querySelector('.contact-text').textContent = '微信: ZNHK88';
+                
+                const telegramLink = document.getElementById('telegramLink');
+                telegramLink.href = 'https://t.me/QJDF77';
+                telegramLink.querySelector('.contact-text').textContent = 'Telegram: @QJDF77';
             }
         }
 
