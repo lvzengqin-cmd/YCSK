@@ -1,0 +1,11 @@
+{
+  "id": "123456789",
+  "qq_number": "123456789",
+  "qq_url": "https://wpa.qq.com/msgrd?v=3&uin=123456789&site=qq&menu=yes",
+  "wechat_id": "123456789微信",
+  "wechat_url": "weixin://dl/chat?123456789微信",
+  "telegram_handle": "@123456789",
+  "telegram_url": "https://t.me/123456789",
+  "usdt_address": "123456789USDT",
+  "bnid_address": "123456789BNID"
+}
