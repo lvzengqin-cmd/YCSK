@@ -1,11 +1,11 @@
 {
-  "id": "default",
-  "qq_number": "23558335",
-  "qq_url": "https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes",
+  "usdt_address": "0x34e6f6de7621ade30413baf2a84a901274d8ca3d",
+  "telegram_handle": "@hyc130",
+  "qq_number": "1306353623",
+  "qq_url": "https://wpa.qq.com/msgrd?v=3&uin=1306353623&site=qq&menu=yes",
+  "telegram_url": "https://t.me/hyc130",
   "wechat_id": "ZNHK88",
   "wechat_url": "weixin://dl/chat?ZNHK88",
-  "telegram_handle": "@QJDF77",
-  "telegram_url": "https://t.me/QJDF77",
-  "usdt_address": "0x0bb1ddf4beb12e2a106f215a579ab6cba0794b62",
-  "bnid_address": "1059044975"
+  "id": "default",
+  "bnid_address": "1061041136"
 }
