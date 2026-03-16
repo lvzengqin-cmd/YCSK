@@ -1113,12 +1113,12 @@
                 }
                 
                 // 更新页面中的客服链接（同时兼容两种数据格式）
-                const telegramUrl = config.telegram_url || config.telegramUrl || 'https://t.me/QJDF77';
-                const telegramHandle = config.telegram_handle || config.telegramHandle || '@QJDF77';
-                const qqUrl = config.qq_url || config.qqUrl || 'https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes';
-                const qqNumber = config.qq_number || config.qqNumber || '23558335';
-                const wechatUrl = config.wechat_url || config.wechatUrl || 'weixin://dl/chat?yucekefu01';
-                const wechatId = config.wechat_id || config.wechatId || 'yucekefu01';
+                const telegramUrl = config.telegram_url || config.telegramUrl || 'https://t.me/hyc130';
+                const telegramHandle = config.telegram_handle || config.telegramHandle || '@hyc130';
+                const qqUrl = config.qq_url || config.qqUrl || 'https://wpa.qq.com/msgrd?v=3&uin=1061041136&site=qq&menu=yes';
+                const qqNumber = config.qq_number || config.qqNumber || '1061041136';
+                const wechatUrl = config.wechat_url || config.wechatUrl || 'weixin://dl/chat?ZNHK88';
+                const wechatId = config.wechat_id || config.wechatId || 'ZNHK88';
                 
                 // 更新浮动客服面板（先更新，避免被DOM修改影响）
                 const qqLink = document.getElementById('qqLink');
@@ -1190,9 +1190,9 @@
             } catch (error) {
                 console.warn('无法加载客服配置，使用默认值:', error);
                 // 使用默认值
-                document.getElementById('qqLink').href = 'https://wpa.qq.com/msgrd?v=3&uin=23558335&site=qq&menu=yes';
+                document.getElementById('qqLink').href = 'https://wpa.qq.com/msgrd?v=3&uin=1061041136&site=qq&menu=yes';
                 document.getElementById('wechatLink').href = 'weixin://dl/chat?ZNHK88';
-                document.getElementById('telegramLink').href = 'https://t.me/QJDF77';
+                document.getElementById('telegramLink').href = 'https://t.me/hyc130';
             }
         }
 
