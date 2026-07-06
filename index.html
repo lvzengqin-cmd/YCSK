@@ -202,6 +202,90 @@
             background: rgba(255, 255, 255, 0.1);
             transform: translateY(-3px);
         }
+
+        .app-download {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #0f766e 100%);
+            color: white;
+        }
+
+        .app-download-card {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 40px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 18px;
+            padding: 42px;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.35);
+            backdrop-filter: blur(14px);
+        }
+
+        .app-download h2 {
+            font-size: 2.4rem;
+            line-height: 1.2;
+            margin-bottom: 18px;
+        }
+
+        .app-download p {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 1.08rem;
+            margin-bottom: 24px;
+        }
+
+        .app-download-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .app-download-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+        }
+
+        .app-download-button.primary {
+            background: white;
+            color: #0f766e;
+            box-shadow: 0 14px 30px rgba(15, 118, 110, 0.28);
+        }
+
+        .app-download-button.secondary {
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .app-download-button:hover {
+            transform: translateY(-3px);
+        }
+
+        .app-download-meta {
+            display: grid;
+            gap: 14px;
+        }
+
+        .app-download-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 18px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.86);
+        }
+
+        .app-download-meta-item i {
+            color: #6ee7b7;
+            font-size: 1.2rem;
+        }
         
         /* 产品优势 */
         .features {
@@ -634,6 +718,15 @@
             .hero-buttons {
                 flex-direction: column;
             }
+
+            .app-download-card {
+                grid-template-columns: 1fr;
+                padding: 28px;
+            }
+
+            .app-download h2 {
+                font-size: 2rem;
+            }
             
             .section-title h2 {
                 font-size: 2rem;
@@ -664,11 +757,12 @@
                 <ul class="nav-links">
                     <li><a href="#features">产品优势</a></li>
                     <li><a href="#pricing">套餐方案</a></li>
+                    <li><a href="#app-download">APP下载</a></li>
                     <li><a href="shouce.html">用户手册</a></li>
                     <li><a href="baipishu.html">白皮书</a></li>
                     <li><a href="#contact">联系我们</a></li>
                 </ul>
-                <a href="#pricing" class="cta-button">立即购买</a>
+                <a href="https://ceyi-event-contract-ai-quant.netlify.app/download.html" class="cta-button" target="_blank" rel="noopener">下载APP</a>
             </nav>
         </div>
     </header>
@@ -682,6 +776,9 @@
                 <div class="hero-buttons">
                     <a href="#pricing" class="btn-primary">
                         <i class="fas fa-shopping-cart"></i> 立即选择套餐
+                    </a>
+                    <a href="https://ceyi-event-contract-ai-quant.netlify.app/download.html" class="btn-secondary" target="_blank" rel="noopener">
+                        <i class="fab fa-android"></i> 下载安卓APP
                     </a>
                     <a href="baipishu.html" class="btn-secondary">
                         <i class="fas fa-file-alt"></i> 查看白皮书
@@ -823,6 +920,40 @@
                     </div>
                     <div class="pricing-footer">
                         <a href="payment.html" class="pricing-button">立即购买</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- APP下载入口 -->
+    <section class="app-download" id="app-download">
+        <div class="container">
+            <div class="app-download-card">
+                <div>
+                    <h2>策奕量化安卓APP</h2>
+                    <p>手机端与网页端账号通用，支持会员状态、历史信号、周期筛选、本机通知提醒和模拟跟单参数同步，方便用户在安卓设备上接收实时信号提醒。</p>
+                    <div class="app-download-actions">
+                        <a href="https://ceyi-event-contract-ai-quant.netlify.app/download.html" class="app-download-button primary" target="_blank" rel="noopener">
+                            <i class="fab fa-android"></i> 打开下载页
+                        </a>
+                        <a href="https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk" class="app-download-button secondary" target="_blank" rel="noopener">
+                            <i class="fas fa-download"></i> 直接下载APK
+                        </a>
+                    </div>
+                </div>
+                <div class="app-download-meta">
+                    <div class="app-download-meta-item">
+                        <i class="fas fa-bell"></i>
+                        <span>会员可接收所选周期的实时信号通知</span>
+                    </div>
+                    <div class="app-download-meta-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>历史已结单信号、胜率和盈亏统计同步查看</span>
+                    </div>
+                    <div class="app-download-meta-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>安装包已签名，支持版本更新提醒</span>
                     </div>
                 </div>
             </div>
