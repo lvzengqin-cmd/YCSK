@@ -124,7 +124,7 @@
         .hero {
             background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
             color: white;
-            padding: 120px 0 80px;
+            padding: 108px 0 70px;
             position: relative;
             overflow: hidden;
         }
@@ -160,21 +160,28 @@
         
         .hero-buttons {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 8px;
         }
         
         .btn-primary {
             background: white;
             color: var(--primary);
-            padding: 15px 35px;
-            border-radius: 8px;
+            min-height: 54px;
+            padding: 0 26px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1.03rem;
+            line-height: 1;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
+            white-space: nowrap;
         }
         
         .btn-primary:hover {
@@ -184,22 +191,26 @@
         }
         
         .btn-secondary {
-            background: transparent;
-            border: 2px solid white;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.75);
             color: white;
-            padding: 15px 35px;
-            border-radius: 8px;
+            min-height: 54px;
+            padding: 0 24px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1.03rem;
+            line-height: 1;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
+            white-space: nowrap;
         }
         
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.16);
             transform: translateY(-3px);
         }
 
@@ -717,6 +728,13 @@
             
             .hero-buttons {
                 flex-direction: column;
+                align-items: stretch;
+                max-width: 360px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
             }
 
             .app-download-card {
@@ -782,9 +800,6 @@
                     </a>
                     <a href="baipishu.html" class="btn-secondary">
                         <i class="fas fa-file-alt"></i> 查看白皮书
-                    </a>
-                    <a href="shouce.html" class="btn-secondary">
-                        <i class="fas fa-book"></i> 查看用户手册
                     </a>
                 </div>
             </div>
