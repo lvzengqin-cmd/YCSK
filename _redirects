@@ -2,3 +2,4 @@
 # 确保 SPA 路由正常工作
 
 /admin/*    /admin/index.html   200
+/download   /download.html      200

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="description" content="策奕量化软件下载官网入口。下载策奕量化安卓APP，查看历史已结单信号、周期统计、模拟跟单参数，并在会员状态下接收实时信号通知。">
+    <meta name="keywords" content="策奕量化,策奕量化软件,策奕量化下载,策奕量化APP,安卓软件下载,事件合约AI量化,BTCUSDT信号提醒">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="策奕量化软件下载 - 官方安卓APP下载入口">
+    <meta property="og:description" content="下载策奕量化安卓APP，会员可按所选周期接收实时信号通知，免费用户可查看历史已结单信号和统计。">
+    <meta property="og:url" content="https://www.yucebot.com/download">
+    <meta property="og:image" content="https://www.yucebot.com/images/ceyi-app-icon.png">
+    <link rel="canonical" href="https://www.yucebot.com/download">
+    <title>策奕量化软件下载 - 官方安卓APP下载入口</title>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "策奕量化",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "Android",
+            "softwareVersion": "1.0.25",
+            "description": "策奕量化是一款面向 BTCUSDT 事件合约场景的 AI 信号提醒、历史统计、周期筛选、模拟跟单参数管理和会员通知工具。",
+            "downloadUrl": "https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk",
+            "publisher": {
+                "@type": "Organization",
+                "name": "策奕数字科技",
+                "url": "https://www.yucebot.com/"
+            },
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #070604;
+            --panel: rgba(15, 12, 8, 0.86);
+            --panel-soft: rgba(255, 255, 255, 0.055);
+            --gold: #e4b85e;
+            --gold-bright: #f6d98e;
+            --text: #f6eddc;
+            --muted: #c9b99a;
+            --line: rgba(228, 184, 94, 0.25);
+            --risk: #e9b46e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+            background:
+                radial-gradient(circle at 18% 10%, rgba(228, 184, 94, 0.2), transparent 28%),
+                radial-gradient(circle at 80% 8%, rgba(101, 72, 28, 0.18), transparent 24%),
+                linear-gradient(135deg, #070604 0%, #151009 52%, #050403 100%);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(rgba(228, 184, 94, 0.052) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(228, 184, 94, 0.052) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, black 0%, transparent 78%);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(7, 6, 4, 0.84);
+            backdrop-filter: blur(18px);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 72px;
+            gap: 18px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gold-bright);
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .button,
+        .nav-cta {
+            max-width: 100%;
+            min-width: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 48px;
+            padding: 0 20px;
+            border-radius: 12px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold-bright), #b88530);
+            color: #140f06;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        .button.secondary {
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        main {
+            padding: 54px 0 42px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
+            gap: 26px;
+            align-items: stretch;
+        }
+
+        .hero-copy,
+        .download-panel,
+        .section {
+            min-width: 0;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: var(--panel);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+            backdrop-filter: blur(18px);
+        }
+
+        .hero-copy {
+            position: relative;
+            min-height: 420px;
+            padding: clamp(28px, 5vw, 56px);
+            overflow: hidden;
+        }
+
+        .hero-copy::after {
+            content: "BTC";
+            position: absolute;
+            right: -18px;
+            bottom: -38px;
+            color: rgba(228, 184, 94, 0.06);
+            font-size: clamp(132px, 23vw, 260px);
+            font-weight: 900;
+            line-height: 0.8;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 18px;
+            padding: 8px 12px;
+            border: 1px solid rgba(228, 184, 94, 0.28);
+            border-radius: 999px;
+            color: var(--gold-bright);
+            background: rgba(228, 184, 94, 0.08);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        h1 {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            font-size: clamp(36px, 7vw, 66px);
+            line-height: 1.08;
+            letter-spacing: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .lead {
+            position: relative;
+            z-index: 1;
+            max-width: 780px;
+            margin-top: 22px;
+            color: var(--muted);
+            font-size: clamp(16px, 2.2vw, 20px);
+            line-height: 1.85;
+            overflow-wrap: anywhere;
+        }
+
+        .hero-actions {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .download-panel {
+            padding: 26px;
+        }
+
+        .app-icon {
+            width: 86px;
+            height: 86px;
+            display: block;
+            object-fit: cover;
+            border-radius: 22px;
+            background: #070604;
+            border: 1px solid rgba(246, 217, 142, 0.38);
+            box-shadow: 0 18px 42px rgba(228, 184, 94, 0.18);
+        }
+
+        .download-panel h2 {
+            margin-top: 18px;
+            font-size: 24px;
+        }
+
+        .version {
+            margin-top: 6px;
+            color: #a99775;
+            font-size: 14px;
+        }
+
+        .actions {
+            display: grid;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .meta {
+            display: grid;
+            gap: 10px;
+            margin-top: 22px;
+            color: #b9aa8b;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .section {
+            margin-top: 22px;
+            padding: clamp(22px, 4vw, 34px);
+        }
+
+        .section h2 {
+            margin-bottom: 16px;
+            font-size: 26px;
+        }
+
+        .section p {
+            color: var(--muted);
+            line-height: 1.85;
+            overflow-wrap: anywhere;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .card {
+            min-width: 0;
+            min-height: 150px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            background: var(--panel-soft);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: var(--gold-bright);
+            font-size: 18px;
+        }
+
+        .card p,
+        li {
+            color: #d6c7aa;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        ol,
+        ul {
+            padding-left: 20px;
+        }
+
+        .risk {
+            color: var(--risk);
+            font-size: 14px;
+        }
+
+        footer {
+            margin-top: 24px;
+            color: #938467;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 860px) {
+            body * {
+                max-width: 100%;
+                white-space: normal;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 100%;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .nav {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 16px 0;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+            }
+
+            main {
+                padding-top: 24px;
+            }
+
+            .hero,
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                display: block;
+            }
+
+            .hero-copy {
+                width: 100%;
+                max-width: 100%;
+                min-height: auto;
+                padding: 26px 18px;
+                overflow: hidden;
+            }
+
+            .download-panel,
+            .section {
+                width: 100%;
+                max-width: 100%;
+                padding: 24px 18px;
+                overflow: hidden;
+            }
+
+            .download-panel {
+                margin-top: 24px;
+            }
+
+            h1 {
+                font-size: clamp(30px, 9vw, 36px);
+                line-height: 1.16;
+            }
+
+            .lead {
+                font-size: 16px;
+                line-height: 1.78;
+            }
+
+            h1,
+            .lead,
+            p,
+            li,
+            .card p,
+            .meta {
+                word-break: break-all;
+            }
+
+            .hero-actions,
+            .actions {
+                width: 100%;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container nav">
+            <a class="brand" href="/">
+                <i class="fas fa-robot"></i>
+                策奕数字科技
+            </a>
+            <nav class="nav-links" aria-label="主导航">
+                <a href="/">官网首页</a>
+                <a href="/baipishu.html">白皮书</a>
+                <a href="/shouce.html">用户手册</a>
+            </nav>
+            <a class="nav-cta" href="https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk">
+                <i class="fab fa-android"></i>
+                下载APP
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="hero">
+            <section class="hero-copy">
+                <div class="eyebrow">策奕量化软件 · 官方下载入口</div>
+                <h1>策奕量化 APP 下载</h1>
+                <p class="lead">
+                    策奕量化以 AI 驱动与自动化执行为核心，面向 BTCUSDT 事件合约场景提供信号提醒、历史统计、周期筛选、本机通知和模拟跟单参数管理。手机端直接连接云端账号数据，方便用户随时查看已结单信号与会员提醒状态。
+                </p>
+                <div class="hero-actions">
+                    <a class="button" href="https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk">
+                        <i class="fas fa-download"></i>
+                        立即下载 Android APK
+                    </a>
+                </div>
+            </section>
+
+            <aside class="download-panel" aria-label="下载信息">
+                <img class="app-icon" src="/images/ceyi-app-icon.png" alt="策奕量化 APP 图标">
+                <h2>Android 正式版</h2>
+                <div class="version">版本 1.0.25 · 包名 com.ceyi.quant</div>
+                <div class="actions">
+                    <a class="button" href="https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk">下载 APK</a>
+                    <a class="button secondary" href="https://ceyi-event-contract-ai-quant.netlify.app/privacy.html">隐私政策</a>
+                    <a class="button secondary" href="https://ceyi-event-contract-ai-quant.netlify.app/terms.html">用户协议</a>
+                </div>
+                <div class="meta">
+                    <span>推荐 Android 8.0 及以上系统安装。</span>
+                    <span>最新网址：download.yucebot.com</span>
+                    <span>如浏览器提示安装风险，请确认来源为策奕官网后继续。</span>
+                </div>
+            </aside>
+        </div>
+
+        <section class="section">
+            <h2>为什么使用策奕量化 APP</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>减少人工盯盘</h3>
+                    <p>结合白皮书中的产品定位，APP 聚焦 7×24 小时行情场景，用手机通知帮助用户减少漏看信号的情况。</p>
+                </div>
+                <div class="card">
+                    <h3>多周期可选</h3>
+                    <p>支持 5 分钟、10 分钟、30 分钟等周期提醒，会员可按自己的关注周期接收对应信号。</p>
+                </div>
+                <div class="card">
+                    <h3>历史可回看</h3>
+                    <p>历史已结单信号、订单数量、胜率与盈亏测算支持按今日、本月、全部和周期维度查看。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>主要功能</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>会员实时通知</h3>
+                    <p>会员用户可在 APP 内开启本机通知，按照所选周期接收实时信号提醒；会员到期后停止实时提醒。</p>
+                </div>
+                <div class="card">
+                    <h3>模拟跟单参数</h3>
+                    <p>用户可设置模拟金额和周期选择，观察不同周期在历史已结单信号中的统计表现。</p>
+                </div>
+                <div class="card">
+                    <h3>云端同步</h3>
+                    <p>APP 连接同一套正式后台，会员状态、历史信号和核心跟单设置保持同步。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>安装与使用流程</h2>
+            <ol>
+                <li>点击本页“下载 APK”获取策奕量化安卓安装包。</li>
+                <li>安装后使用策奕量化账号登录；新用户可在 APP 内注册。</li>
+                <li>免费用户可查看已结单历史信号，会员用户可开启实时信号通知。</li>
+                <li>在 APP 内设置周期、模拟金额和通知状态，设置会同步到正式后台。</li>
+            </ol>
+        </section>
+
+        <section class="section">
+            <h2>合规与风险提示</h2>
+            <p class="risk">
+                策奕量化为信号提醒、统计分析和参数管理工具，不承诺固定收益，不构成投资建议。虚拟资产及事件合约相关操作具有较高风险，历史统计与胜率不代表未来结果。请用户结合自身风险承受能力独立判断，并控制单次开仓金额。
+            </p>
+        </section>
+
+        <footer>
+            策奕量化软件下载 · 官方安卓 APP 下载入口 · download.yucebot.com
+        </footer>
+    </main>
+</body>
+</html>
