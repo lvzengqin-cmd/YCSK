@@ -3,3 +3,4 @@
 
 /admin/*    /admin/index.html   200
 /download   /download.html      200
+/invite/:code /download.html?invite=:code 302
