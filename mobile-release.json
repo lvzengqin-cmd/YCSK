@@ -1,18 +1,18 @@
-{
-  "appName": "策奕量化",
-  "latestVersion": "1.0.26",
-  "latestVersionCode": 10026,
-  "minimumVersion": "1.0.26",
-  "minimumVersionCode": 10026,
+﻿{
+  "appName": "策弈量化",
+  "latestVersion": "1.0.28",
+  "latestVersionCode": 10028,
+  "minimumVersion": "1.0.28",
+  "minimumVersionCode": 10028,
   "packageName": "com.ceyi.quant",
   "platform": "android",
   "apkUrl": "https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk",
-  "apkSizeBytes": 43997405,
-  "sha256": "903f4b9442f448755c34107429983a560cfb9fd83c01e96ab6533b5b55d1cf1a",
-  "updatedAt": "2026-07-07T21:10:00+08:00",
+  "apkSizeBytes": 44001745,
+  "sha256": "687c58d53dcfb391b0e2f26805300b684037a79bce74a8adb28d7cb1d5f32cca",
+  "updatedAt": "2026-07-08T00:40:00+08:00",
   "releaseNotes": [
-    "注册页邮箱验证码位置调整到邮箱下方",
-    "优化安卓键盘弹出时底部输入框被遮挡的问题",
-    "同步官网与下载入口的最新安装包"
+    "统一 App 名称为策弈量化",
+    "优化代理邀请下载页品牌展示和客服联系方式",
+    "同步清理网页端交易账户绑定入口"
   ]
 }
