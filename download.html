@@ -793,7 +793,7 @@
                         applyRelease(fallback);
                     });
                 if (inviteCode) {
-                    fetch("https://ceyi-api.onrender.com/api/public/invite/" + encodeURIComponent(inviteCode), { cache: "no-store" })
+                    fetch("https://ceyi-api-live.onrender.com/api/public/invite/" + encodeURIComponent(inviteCode), { cache: "no-store" })
                         .then(function (response) {
                             if (!response.ok) throw new Error("invite unavailable");
                             return response.json();
