@@ -564,6 +564,10 @@
                         <i class="fas fa-download"></i>
                         立即下载 Android APK
                     </a>
+                    <a class="button secondary" href="https://ceyi.yucebot.com/" data-web-entry>
+                        <i class="fas fa-desktop"></i>
+                        打开网页版系统
+                    </a>
                 </div>
             </section>
 
@@ -577,6 +581,7 @@
                 </div>
                 <div class="actions">
                     <a class="button" href="https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.33-10033-release.apk" data-download-link>下载 APK</a>
+                    <a class="button secondary" href="https://ceyi.yucebot.com/" data-web-entry>网页版系统</a>
                     <a class="button secondary" href="https://ceyi.yucebot.com/privacy.html">隐私政策</a>
                     <a class="button secondary" href="https://ceyi.yucebot.com/terms.html">用户协议</a>
                 </div>
@@ -588,6 +593,7 @@
                 <div class="support-list" data-agent-support></div>
                 <div class="meta">
                     <span>推荐 Android 8.0 及以上系统安装。</span>
+                    <span>APP 与网页版账号、会员状态、历史信号和周期提醒设置互通。</span>
                     <span>最新网址：ceyi.yucebot.com/download.html</span>
                     <span>如浏览器提示安装风险，请确认来源为策弈官网后继续。</span>
                 </div>
@@ -703,6 +709,15 @@
                 return (params.get("invite") || params.get("ref") || "").trim();
             }
 
+            function webEntryUrl() {
+                var inviteCode = currentInviteCode();
+                var url = new URL("https://ceyi.yucebot.com/");
+                if (inviteCode) {
+                    url.searchParams.set("invite", inviteCode);
+                }
+                return url.toString();
+            }
+
             var copyToastTimer = 0;
             function showCopyToast(message) {
                 var toast = document.querySelector("[data-copy-success]");
@@ -810,6 +825,9 @@
 
             function loadRelease() {
                 var inviteCode = currentInviteCode();
+                document.querySelectorAll("[data-web-entry]").forEach(function (link) {
+                    link.setAttribute("href", webEntryUrl());
+                });
                 var copyButton = document.querySelector("[data-copy-invite]");
                 if (copyButton) {
                     copyButton.addEventListener("click", function () {
