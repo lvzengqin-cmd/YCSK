@@ -774,7 +774,7 @@
                 }) : [];
                 var supportRoot = document.querySelector("[data-agent-support]");
                 if (supportRoot && contacts.length) {
-                    supportRoot.innerHTML = "";
+                    supportRoot.replaceChildren();
                     contacts.forEach(function (contact) {
                         var link = document.createElement("a");
                         link.className = "support-card";
@@ -783,8 +783,11 @@
                             link.target = "_blank";
                             link.rel = "noreferrer";
                         }
-                        link.innerHTML = "<span>" + (contact.channel === "telegram" ? "Telegram" : "QQ") + "</span><strong></strong>";
-                        link.querySelector("strong").textContent = supportLabel(contact);
+                        var channel = document.createElement("span");
+                        channel.textContent = contact.channel === "telegram" ? "Telegram" : "QQ";
+                        var label = document.createElement("strong");
+                        label.textContent = supportLabel(contact);
+                        link.append(channel, label);
                         supportRoot.appendChild(link);
                     });
                     supportRoot.classList.add("active");

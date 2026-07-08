@@ -1079,6 +1079,18 @@
             return urlParams.get('agent') || 'default';
         }
 
+        function escapeHtml(value) {
+            return String(value || '').replace(/[&<>"']/g, function(char) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                }[char];
+            });
+        }
+
         // 加载动态客服配置（支持多客服）
         async function loadContactConfig() {
             try {
@@ -1136,6 +1148,9 @@
                 // 更新技术支持部分
                 const supportSection = document.querySelector('#support .grid');
                 if (supportSection) {
+                    const safeTelegramHandle = escapeHtml(telegramHandle);
+                    const safeQqNumber = escapeHtml(qqNumber);
+                    const safeWechatId = escapeHtml(wechatId);
                     supportSection.innerHTML = `
                         <div class="gradient-border bg-dark p-6 rounded-lg card-hover">
                             <div class="text-secondary text-4xl mb-4">
@@ -1145,7 +1160,7 @@
                             <div class="space-y-2 text-gray-300">
                                 <p class="flex items-center">
                                     <i class="fas fa-user-circle text-primary mr-2"></i>
-                                    ${telegramHandle}
+                                    ${safeTelegramHandle}
                                 </p>
                             </div>
                             <p class="text-gray-400 text-sm mt-4">
@@ -1161,7 +1176,7 @@
                             <div class="space-y-2 text-gray-300">
                                 <p class="flex items-center">
                                     <i class="fas fa-user-circle text-primary mr-2"></i>
-                                    ${qqNumber}
+                                    ${safeQqNumber}
                                 </p>
                             </div>
                             <p class="text-gray-400 text-sm mt-4">
@@ -1177,7 +1192,7 @@
                             <div class="space-y-2 text-gray-300">
                                 <p class="flex items-center">
                                     <i class="fas fa-user-circle text-primary mr-2"></i>
-                                    ${wechatId}
+                                    ${safeWechatId}
                                 </p>
                             </div>
                             <p class="text-gray-400 text-sm mt-4">

@@ -1190,15 +1190,15 @@
                 // 更新浮动客服链接和文字
                 const qqLink = document.getElementById('qqLink');
                 qqLink.href = qqUrl;
-                qqLink.innerHTML = `<i class="fab fa-qq qq-icon"></i><span>QQ: ${qqNumber}</span>`;
+                qqLink.querySelector('.contact-text').textContent = `QQ: ${qqNumber}`;
                 
                 const wechatLink = document.getElementById('wechatLink');
                 wechatLink.href = wechatUrl;
-                wechatLink.innerHTML = `<i class="fab fa-weixin wechat-icon"></i><span>微信: ${wechatId}</span>`;
+                wechatLink.querySelector('.contact-text').textContent = `微信: ${wechatId}`;
                 
                 const telegramLink = document.getElementById('telegramLink');
                 telegramLink.href = telegramUrl;
-                telegramLink.innerHTML = `<i class="fab fa-telegram telegram-icon"></i><span>Telegram: ${telegramHandle}</span>`;
+                telegramLink.querySelector('.contact-text').textContent = `Telegram: ${telegramHandle}`;
                 
             } catch (error) {
                 console.warn('无法加载客服配置，使用默认值:', error);

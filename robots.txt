@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /data/
+Disallow: /admin/config.yml
+
+User-agent: Baiduspider
+Allow: /
+Disallow: /admin/
+Disallow: /data/
+Disallow: /admin/config.yml
+
+Sitemap: https://www.yucebot.com/sitemap.xml
+Sitemap: https://ceyi.yucebot.com/sitemap.xml
