@@ -5,7 +5,7 @@
 - 官网首页：https://www.yucebot.com/
 - 软件下载页：https://www.yucebot.com/download
 - 软件下载页直链：https://www.yucebot.com/download.html
-- 下载子域名：https://download.yucebot.com/
+- 量化系统下载页：https://ceyi.yucebot.com/download.html
 - 白皮书：https://www.yucebot.com/baipishu
 - 用户手册：https://www.yucebot.com/shouce
 - 付款说明：https://www.yucebot.com/payment

@@ -12,7 +12,7 @@
     <meta property="og:url" content="https://www.yucebot.com/download">
     <meta property="og:image" content="https://www.yucebot.com/images/ceyi-app-icon.png">
     <link rel="canonical" href="https://www.yucebot.com/download">
-    <link rel="alternate" href="https://download.yucebot.com/">
+    <link rel="alternate" href="https://ceyi.yucebot.com/download.html">
     <title>策弈量化软件下载 - 官方安卓APP下载入口</title>
     <script type="application/ld+json">
         {
@@ -23,7 +23,7 @@
             "operatingSystem": "Android",
             "softwareVersion": "最新版",
             "description": "策弈量化是一款面向 BTCUSDT 事件合约场景的 AI 信号提醒、历史统计、周期筛选、模拟跟单参数管理和会员通知工具。",
-            "downloadUrl": "https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk",
+            "downloadUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.33-10033-release.apk",
             "publisher": {
                 "@type": "Organization",
                 "name": "河南策弈数字科技有限公司",
@@ -414,6 +414,31 @@
             font-size: 14px;
         }
 
+        .copy-success-toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 30;
+            min-width: 148px;
+            max-width: min(360px, calc(100vw - 32px));
+            padding: 13px 18px;
+            border: 1px solid rgba(244, 211, 135, 0.38);
+            border-radius: 12px;
+            background: rgba(14, 11, 6, 0.92);
+            color: #f8df9d;
+            box-shadow: 0 18px 46px rgba(0, 0, 0, 0.38), 0 0 24px rgba(228, 184, 94, 0.18);
+            text-align: center;
+            transform: translate(-50%, 12px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 160ms ease, transform 160ms ease;
+        }
+
+        .copy-success-toast.active {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
         footer {
             margin-top: 24px;
             color: #938467;
@@ -518,9 +543,8 @@
                 <a href="/">官网首页</a>
                 <a href="/baipishu">白皮书</a>
                 <a href="/shouce">用户手册</a>
-                <a href="https://ceyi-event-contract-ai-quant.netlify.app/" target="_blank" rel="noopener">登录系统</a>
             </nav>
-            <a class="nav-cta" href="https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk">
+            <a class="nav-cta" href="https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.33-10033-release.apk">
                 <i class="fab fa-android"></i>
                 下载APP
             </a>
@@ -536,13 +560,9 @@
                     策弈量化以 AI 驱动与自动化执行为核心，面向 BTCUSDT 事件合约场景提供信号提醒、历史统计、周期筛选、本机通知和模拟跟单参数管理。手机端与网页端账号通用，方便用户随时查看已结单信号与会员提醒状态。
                 </p>
                 <div class="hero-actions">
-                    <a class="button" href="https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk">
+                    <a class="button" href="https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.33-10033-release.apk">
                         <i class="fas fa-download"></i>
                         立即下载 Android APK
-                    </a>
-                    <a class="button secondary" href="https://ceyi-event-contract-ai-quant.netlify.app/" target="_blank" rel="noopener">
-                        <i class="fas fa-desktop"></i>
-                        打开网页端
                     </a>
                 </div>
             </section>
@@ -556,9 +576,9 @@
                     <span data-release-updated></span>
                 </div>
                 <div class="actions">
-                    <a class="button" href="https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk" data-download-link>下载 APK</a>
-                    <a class="button secondary" href="https://ceyi-event-contract-ai-quant.netlify.app/privacy.html">隐私政策</a>
-                    <a class="button secondary" href="https://ceyi-event-contract-ai-quant.netlify.app/terms.html">用户协议</a>
+                    <a class="button" href="https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.33-10033-release.apk" data-download-link>下载 APK</a>
+                    <a class="button secondary" href="https://ceyi.yucebot.com/privacy.html">隐私政策</a>
+                    <a class="button secondary" href="https://ceyi.yucebot.com/terms.html">用户协议</a>
                 </div>
                 <div class="invite-card" data-invite-card>
                     <span>专属邀请</span>
@@ -568,11 +588,12 @@
                 <div class="support-list" data-agent-support></div>
                 <div class="meta">
                     <span>推荐 Android 8.0 及以上系统安装。</span>
-                    <span>最新网址：download.yucebot.com</span>
+                    <span>最新网址：ceyi.yucebot.com/download.html</span>
                     <span>如浏览器提示安装风险，请确认来源为策弈官网后继续。</span>
                 </div>
             </aside>
         </div>
+        <div class="copy-success-toast" data-copy-success aria-live="polite" role="status"></div>
 
         <section class="section">
             <h2>为什么使用策弈量化 APP</h2>
@@ -644,7 +665,7 @@
         </section>
 
         <footer>
-            河南策弈数字科技有限公司 · 策弈量化软件下载 · <span data-footer-release>Android 最新版本</span> · 官网短链接：https://www.yucebot.com/download · 子域名：https://download.yucebot.com/
+            河南策弈数字科技有限公司 · 策弈量化软件下载 · <span data-footer-release>Android 最新版本</span> · 官网短链接：https://www.yucebot.com/download · 量化系统：https://ceyi.yucebot.com/
         </footer>
     </main>
     <script>
@@ -653,7 +674,7 @@
                 latestVersion: "",
                 latestVersionCode: "",
                 packageName: "com.ceyi.quant",
-                apkUrl: "https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk",
+                apkUrl: "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.33-10033-release.apk",
                 apkSizeBytes: 0,
                 updatedAt: ""
             };
@@ -682,6 +703,40 @@
                 return (params.get("invite") || params.get("ref") || "").trim();
             }
 
+            var copyToastTimer = 0;
+            function showCopyToast(message) {
+                var toast = document.querySelector("[data-copy-success]");
+                if (!toast) return;
+                toast.textContent = message;
+                toast.classList.add("active");
+                window.clearTimeout(copyToastTimer);
+                copyToastTimer = window.setTimeout(function () {
+                    toast.classList.remove("active");
+                }, 2200);
+            }
+
+            function copyText(text) {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    return navigator.clipboard.writeText(text);
+                }
+                return new Promise(function (resolve, reject) {
+                    var input = document.createElement("textarea");
+                    input.value = text;
+                    input.setAttribute("readonly", "readonly");
+                    input.style.position = "fixed";
+                    input.style.left = "-9999px";
+                    document.body.appendChild(input);
+                    input.select();
+                    try {
+                        document.execCommand("copy") ? resolve() : reject(new Error("copy command failed"));
+                    } catch (error) {
+                        reject(error);
+                    } finally {
+                        document.body.removeChild(input);
+                    }
+                });
+            }
+
             function supportLabel(contact) {
                 var channel = contact.channel === "telegram" ? "TG" : contact.channel === "qq" ? "QQ" : "客服";
                 return (contact.label || channel) + (contact.account ? " · " + contact.account : "");
@@ -690,22 +745,7 @@
             function applyInviteProfile(profile) {
                 if (!profile) return;
                 var branding = profile.branding || {};
-                var appName = String(branding.softwareName || "").trim();
                 var inviteCode = String(profile.inviteCode || currentInviteCode()).trim();
-                if (appName) {
-                    setText("[data-app-name]", appName + " Android 正式版");
-                    document.title = appName + "下载 - 官方安卓APP下载入口";
-                    var jsonLd = document.querySelector('script[type="application/ld+json"]');
-                    if (jsonLd) {
-                        try {
-                            var data = JSON.parse(jsonLd.textContent || "{}");
-                            data.name = appName;
-                            jsonLd.textContent = JSON.stringify(data, null, 12);
-                        } catch (error) {
-                            // Keep the static structured data if parsing is blocked.
-                        }
-                    }
-                }
                 if (inviteCode) {
                     var inviteCard = document.querySelector("[data-invite-card]");
                     var inviteNode = document.querySelector("[data-invite-code]");
@@ -775,22 +815,32 @@
                     copyButton.addEventListener("click", function () {
                         var code = currentInviteCode() || (document.querySelector("[data-invite-code]") || {}).textContent || "";
                         if (!code) return;
-                        navigator.clipboard && navigator.clipboard.writeText(code).then(function () {
+                        copyText(code).then(function () {
                             copyButton.textContent = "已复制邀请码";
+                            showCopyToast("复制成功");
                             window.setTimeout(function () { copyButton.textContent = "复制邀请码"; }, 1800);
                         }).catch(function () {
                             copyButton.textContent = code;
+                            showCopyToast("复制失败，请手动复制邀请码");
                         });
                     });
                 }
-                fetch("/mobile-release.json", { cache: "no-store" })
+                fetch("https://ceyi.yucebot.com/api/mobile/release?source=official-download", { cache: "no-store" })
                     .then(function (response) {
                         if (!response.ok) throw new Error("release config unavailable");
                         return response.json();
                     })
                     .then(applyRelease)
                     .catch(function () {
-                        applyRelease(fallback);
+                        fetch("/mobile-release.json", { cache: "no-store" })
+                            .then(function (response) {
+                                if (!response.ok) throw new Error("local release config unavailable");
+                                return response.json();
+                            })
+                            .then(applyRelease)
+                            .catch(function () {
+                                applyRelease(fallback);
+                            });
                     });
                 if (inviteCode) {
                     fetch("https://ceyi-api-live.onrender.com/api/public/invite/" + encodeURIComponent(inviteCode), { cache: "no-store" })

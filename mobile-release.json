@@ -1,18 +1,18 @@
 {
   "appName": "策弈量化",
-  "latestVersion": "1.0.29",
-  "latestVersionCode": 10029,
-  "minimumVersion": "1.0.29",
-  "minimumVersionCode": 10029,
+  "latestVersion": "1.0.33",
+  "latestVersionCode": 10033,
+  "minimumVersion": "1.0.30",
+  "minimumVersionCode": 10030,
   "packageName": "com.ceyi.quant",
   "platform": "android",
-  "apkUrl": "https://ceyi-event-contract-ai-quant.netlify.app/downloads/ceyi-quant-latest.apk",
-  "apkSizeBytes": 44002805,
-  "sha256": "b2d473f335b353d5aa0299f5bbf078ff3fb81dd638b30bf27b281e4dea58ef5b",
-  "updatedAt": "2026-07-08T06:45:00+08:00",
+  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.33-10033-release.apk",
+  "apkSizeBytes": 44006629,
+  "sha256": "d2351c2e53c79349c4b980400b52c5a8b5d94e58dbd9c4b6df6336f2b51746d0",
+  "updatedAt": "2026-07-08T23:56:56+08:00",
   "releaseNotes": [
-    "统一 App 与系统通知名称为策弈量化",
-    "同步代理邀请品牌与客服联系方式",
-    "修复移动端发布元数据与网页端更新检测"
+    "修复 App 内更新弹窗反复出现的问题，更新检测优先读取安卓真实安装版本。",
+    "修复更新说明中文乱码，保证版本提示、强制更新说明和按钮文案正常显示。",
+    "保留下载链接防缓存参数，避免浏览器下载旧安装包。"
   ]
 }
