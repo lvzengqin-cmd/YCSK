@@ -1,18 +1,19 @@
 {
   "appName": "策弈量化",
-  "latestVersion": "1.0.34",
-  "latestVersionCode": 10034,
+  "latestVersion": "1.0.35",
+  "latestVersionCode": 10035,
   "minimumVersion": "1.0.30",
   "minimumVersionCode": 10030,
   "packageName": "com.ceyi.quant",
   "platform": "android",
-  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.34-10034-release.apk",
-  "apkSizeBytes": 41288587,
-  "sha256": "ca39c7c446c57a4c8b1c66c07d348c28669061ffa0a97a4666b220457ed9254d",
-  "updatedAt": "2026-07-09T13:14:24+08:00",
+  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.35-10035-release.apk",
+  "apkSizeBytes": 41325167,
+  "sha256": "a14b5d75bad14d45612a928977d6d2aa663b51f1b3b74bda677fbbbbf89d3957",
+  "updatedAt": "2026-07-10T03:16:59+08:00",
   "releaseNotes": [
-    "Firebase Android remote push configuration is included.",
-    "Uses the verified in-place Android upgrade signing path.",
-    "Synchronizes the app update prompt with the production download package."
+    "优化安卓真实自动跟单校准稳定性。",
+    "5m 事件合约点击买涨/买跌后即视为完成下单。",
+    "增加 Binance 金额输入后的稳定等待、二次收键盘和点击重试。",
+    "保持当前已安装用户可无缝覆盖升级的兼容签名链路。"
   ]
 }
