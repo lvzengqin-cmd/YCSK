@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "test": "node scripts/site-diagnostics.mjs"
+    "test": "node scripts/site-diagnostics.mjs && node scripts/security-diagnostics.mjs",
+    "check:security": "node scripts/security-diagnostics.mjs"
   }
 }
