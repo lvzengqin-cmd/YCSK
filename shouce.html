@@ -1148,58 +1148,11 @@
                 // 更新技术支持部分
                 const supportSection = document.querySelector('#support .grid');
                 if (supportSection) {
-                    const safeTelegramHandle = escapeHtml(telegramHandle);
-                    const safeQqNumber = escapeHtml(qqNumber);
-                    const safeWechatId = escapeHtml(wechatId);
-                    supportSection.innerHTML = `
-                        <div class="gradient-border bg-dark p-6 rounded-lg card-hover">
-                            <div class="text-secondary text-4xl mb-4">
-                                <i class="fab fa-telegram-plane"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-white mb-3">官方电报</h3>
-                            <div class="space-y-2 text-gray-300">
-                                <p class="flex items-center">
-                                    <i class="fas fa-user-circle text-primary mr-2"></i>
-                                    ${safeTelegramHandle}
-                                </p>
-                            </div>
-                            <p class="text-gray-400 text-sm mt-4">
-                                24小时内回复，建议附上问题截图与设备信息
-                            </p>
-                        </div>
-                        
-                        <div class="gradient-border bg-dark p-6 rounded-lg card-hover">
-                            <div class="text-secondary text-4xl mb-4">
-                                <i class="fab fa-qq"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-white mb-3">官方客服QQ</h3>
-                            <div class="space-y-2 text-gray-300">
-                                <p class="flex items-center">
-                                    <i class="fas fa-user-circle text-primary mr-2"></i>
-                                    ${safeQqNumber}
-                                </p>
-                            </div>
-                            <p class="text-gray-400 text-sm mt-4">
-                                备注"事件量化用户"加入交流群，获取实时解答
-                            </p>
-                        </div>
-                        
-                        <div class="gradient-border bg-dark p-6 rounded-lg card-hover">
-                            <div class="text-secondary text-4xl mb-4">
-                                <i class="fab fa-weixin"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-white mb-3">官方微信</h3>
-                            <div class="space-y-2 text-gray-300">
-                                <p class="flex items-center">
-                                    <i class="fas fa-user-circle text-primary mr-2"></i>
-                                    ${safeWechatId}
-                                </p>
-                            </div>
-                            <p class="text-gray-400 text-sm mt-4">
-                                添加时备注"事件量化用户"
-                            </p>
-                        </div>
-                    `;
+                    supportSection.replaceChildren(
+                        createSupportCard('fab fa-telegram-plane', '官方电报', telegramHandle, '24小时内回复，建议附上问题截图与设备信息'),
+                        createSupportCard('fab fa-qq', '官方客服QQ', qqNumber, '备注"事件量化用户"加入交流群，获取实时解答'),
+                        createSupportCard('fab fa-weixin', '官方微信', wechatId, '添加时备注"事件量化用户"')
+                    );
                 }
                 
             } catch (error) {
@@ -1209,6 +1162,38 @@
                 document.getElementById('wechatLink').href = 'weixin://dl/chat?ZNHK88';
                 document.getElementById('telegramLink').href = 'https://t.me/hyc130';
             }
+        }
+
+        function createSupportCard(iconClass, title, value, note) {
+            const card = document.createElement('div');
+            card.className = 'gradient-border bg-dark p-6 rounded-lg card-hover';
+
+            const iconWrap = document.createElement('div');
+            iconWrap.className = 'text-secondary text-4xl mb-4';
+            const icon = document.createElement('i');
+            icon.className = iconClass;
+            iconWrap.appendChild(icon);
+
+            const heading = document.createElement('h3');
+            heading.className = 'text-xl font-semibold text-white mb-3';
+            heading.textContent = title;
+
+            const infoWrap = document.createElement('div');
+            infoWrap.className = 'space-y-2 text-gray-300';
+            const line = document.createElement('p');
+            line.className = 'flex items-center';
+            const userIcon = document.createElement('i');
+            userIcon.className = 'fas fa-user-circle text-primary mr-2';
+            const valueText = document.createTextNode(value || '-');
+            line.append(userIcon, valueText);
+            infoWrap.appendChild(line);
+
+            const noteText = document.createElement('p');
+            noteText.className = 'text-gray-400 text-sm mt-4';
+            noteText.textContent = note;
+
+            card.append(iconWrap, heading, infoWrap, noteText);
+            return card;
         }
 
         // 浮动客服功能

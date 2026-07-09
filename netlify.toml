@@ -9,18 +9,21 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
     Cross-Origin-Opener-Policy = "same-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://cdn.tailwindcss.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; connect-src 'self' https://ceyi.yucebot.com https://ceyi-api-live.onrender.com https://identity.netlify.com https://api.netlify.com; frame-src https://identity.netlify.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests"
 
 [[headers]]
   for = "/data/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow, noarchive"
     Cache-Control = "no-store"
+    Content-Security-Policy = "default-src 'none'; frame-ancestors 'none'"
 
 [[headers]]
   for = "/admin/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow, noarchive"
     Cache-Control = "no-store"
+    Content-Security-Policy = "default-src 'self' https://identity.netlify.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://identity.netlify.com https://api.netlify.com; frame-src https://identity.netlify.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
 
 [[redirects]]
   from = "/admin/*"
