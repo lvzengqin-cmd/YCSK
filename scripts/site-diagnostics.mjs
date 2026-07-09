@@ -4,19 +4,17 @@ import fs from "node:fs";
 const root = new URL("../", import.meta.url);
 const read = (path) => fs.readFileSync(new URL(path, root), "utf8");
 
-const currentVersion = "1.0.33";
-const currentVersionCode = 10033;
+const currentVersion = "1.0.34";
+const currentVersionCode = 10034;
 const officialQuantUrl = "https://ceyi.yucebot.com";
-const currentApk = `${officialQuantUrl}/downloads/ceyi-quant-1.0.33-10033-release.apk`;
+const currentApk = `${officialQuantUrl}/downloads/ceyi-quant-1.0.34-10034-release.apk`;
 const forbiddenPatterns = [
   "ceyi-event-contract-ai-quant.netlify.app",
   "ceyi-quant-latest.apk",
   "download.yucebot.com",
   "1.0.29",
   "10029",
-  "策奕",
-  "打开网页端",
-  "登录系统"
+  String.fromCodePoint(0x7edb, 0x6827)
 ];
 
 const filesToScan = [
@@ -32,6 +30,7 @@ const release = JSON.parse(read("mobile-release.json"));
 assert.equal(release.latestVersion, currentVersion, "official-site mobile-release latestVersion must match current app");
 assert.equal(release.latestVersionCode, currentVersionCode, "official-site mobile-release versionCode must match current app");
 assert.equal(release.apkUrl, currentApk, "official-site mobile-release APK URL must use the official quant subdomain");
+assert.equal(release.sha256, "ca39c7c446c57a4c8b1c66c07d348c28669061ffa0a97a4666b220457ed9254d", "official-site APK sha must match verified APK");
 
 const downloadHtml = read("download.html");
 assert.ok(downloadHtml.includes(`${officialQuantUrl}/api/mobile/release`), "download page should read the quant release API first");
@@ -40,9 +39,8 @@ assert.ok(downloadHtml.includes(`${officialQuantUrl}/`), "download page should l
 assert.ok(downloadHtml.includes(`${officialQuantUrl}/privacy.html`), "download page should link privacy policy on the official quant subdomain");
 assert.ok(downloadHtml.includes(`${officialQuantUrl}/terms.html`), "download page should link terms on the official quant subdomain");
 assert.ok(downloadHtml.includes("data-copy-success"), "download page should show a visible copy-success toast for invite codes");
+assert.ok(downloadHtml.includes("data-web-entry"), "download page should expose the quant website entry");
 assert.equal(downloadHtml.includes("branding.softwareName"), false, "official download page should not pretend the installed app name is dynamic per agent");
-assert.equal(downloadHtml.includes("登录系统"), false, "official download page should not include a web login entry");
-assert.equal(downloadHtml.includes("打开网页端"), false, "official download page should stay focused on app download only");
 
 const indexHtml = read("index.html");
 assert.ok(indexHtml.includes(currentApk), "homepage direct APK download should use the current APK URL");

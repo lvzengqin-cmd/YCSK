@@ -1,18 +1,18 @@
 {
   "appName": "策弈量化",
-  "latestVersion": "1.0.33",
-  "latestVersionCode": 10033,
+  "latestVersion": "1.0.34",
+  "latestVersionCode": 10034,
   "minimumVersion": "1.0.30",
   "minimumVersionCode": 10030,
   "packageName": "com.ceyi.quant",
   "platform": "android",
-  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.33-10033-release.apk",
-  "apkSizeBytes": 44006629,
-  "sha256": "d2351c2e53c79349c4b980400b52c5a8b5d94e58dbd9c4b6df6336f2b51746d0",
-  "updatedAt": "2026-07-08T23:56:56+08:00",
+  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.34-10034-release.apk",
+  "apkSizeBytes": 41288587,
+  "sha256": "ca39c7c446c57a4c8b1c66c07d348c28669061ffa0a97a4666b220457ed9254d",
+  "updatedAt": "2026-07-09T13:14:24+08:00",
   "releaseNotes": [
-    "修复 App 内更新弹窗反复出现的问题，更新检测优先读取安卓真实安装版本。",
-    "修复更新说明中文乱码，保证版本提示、强制更新说明和按钮文案正常显示。",
-    "保留下载链接防缓存参数，避免浏览器下载旧安装包。"
+    "Firebase Android remote push configuration is included.",
+    "Uses the verified in-place Android upgrade signing path.",
+    "Synchronizes the app update prompt with the production download package."
   ]
 }
