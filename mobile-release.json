@@ -1,20 +1,20 @@
 {
-    "appName":  "策弈量化",
-    "latestVersion":  "1.0.39",
-    "latestVersionCode":  10039,
-    "minimumVersion":  "1.0.30",
-    "minimumVersionCode":  10030,
-    "packageName":  "com.ceyi.quant",
-    "platform":  "android",
-    "apkUrl":  "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.39-10039-release.apk",
-    "apkSizeBytes":  41388435,
-    "sha256":  "a43c4ad165c2cb0bf8449a7e005e3303e8778c46dc0a3eef346e72895f666f97",
-    "updatedAt":  "2026-07-11T02:09:14+08:00",
-    "releaseNotes":  [
-                         "修复 HiBT 5 分钟真实自动跟单执行无反应的问题，5m 做多/做空已完成真机验证。",
-                         "5m 跟单改为本机固定模板兜底：选择下单周期、输入对应金额、点击买涨或买跌，避免旧校准点干扰。",
-                         "自动跟单执行记录新增后端兼容上报路径，当前 API 暂未部署专用接口时会自动落到移动端事件记录。",
-                         "Firebase Android 配置已纳入构建，远程推送配置检查通过。",
-                         "保持当前签名链路，可从 1.0.38 直接覆盖升级。"
-                     ]
+  "appName": "策弈量化",
+  "latestVersion": "1.0.40",
+  "latestVersionCode": 10040,
+  "minimumVersion": "1.0.30",
+  "minimumVersionCode": 10030,
+  "packageName": "com.ceyi.quant",
+  "platform": "android",
+  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.40-10040-release.apk",
+  "apkSizeBytes": 41373523,
+  "sha256": "28d97cd77b6406bfac278a0d7ac301c6039ad30796247b00bfa71803cd73fa09",
+  "updatedAt": "2026-07-11T04:58:20+08:00",
+  "releaseNotes": [
+    "修复真实自动跟单保存后的提示误导，保存后会明确显示真实信号自动执行开关、通知周期和未完成条件。",
+    "修复真实自动执行开关的保存竞态，避免刚开启后立即保存时被错误写回关闭状态。",
+    "自动化校准区域改为“自动跟单校准与执行”，明确校准、识别和5U测试不受右侧开关影响。",
+    "Firebase Android 与 Expo 远程推送配置检查通过，提升安卓端24小时信号通知可靠性。",
+    "保持当前用户签名链路，支持已安装用户直接覆盖升级；正式签名包已单独归档，后续用于应用商店或迁移版本。"
+  ]
 }
