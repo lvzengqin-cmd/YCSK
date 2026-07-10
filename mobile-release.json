@@ -1,19 +1,20 @@
 {
-  "appName": "策弈量化",
-  "latestVersion": "1.0.35",
-  "latestVersionCode": 10035,
-  "minimumVersion": "1.0.30",
-  "minimumVersionCode": 10030,
-  "packageName": "com.ceyi.quant",
-  "platform": "android",
-  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.35-10035-release.apk",
-  "apkSizeBytes": 41325167,
-  "sha256": "a14b5d75bad14d45612a928977d6d2aa663b51f1b3b74bda677fbbbbf89d3957",
-  "updatedAt": "2026-07-10T03:16:59+08:00",
-  "releaseNotes": [
-    "优化安卓真实自动跟单校准稳定性。",
-    "5m 事件合约点击买涨/买跌后即视为完成下单。",
-    "增加 Binance 金额输入后的稳定等待、二次收键盘和点击重试。",
-    "保持当前已安装用户可无缝覆盖升级的兼容签名链路。"
-  ]
+    "appName":  "策弈量化",
+    "latestVersion":  "1.0.39",
+    "latestVersionCode":  10039,
+    "minimumVersion":  "1.0.30",
+    "minimumVersionCode":  10030,
+    "packageName":  "com.ceyi.quant",
+    "platform":  "android",
+    "apkUrl":  "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.39-10039-release.apk",
+    "apkSizeBytes":  41388435,
+    "sha256":  "a43c4ad165c2cb0bf8449a7e005e3303e8778c46dc0a3eef346e72895f666f97",
+    "updatedAt":  "2026-07-11T02:09:14+08:00",
+    "releaseNotes":  [
+                         "修复 HiBT 5 分钟真实自动跟单执行无反应的问题，5m 做多/做空已完成真机验证。",
+                         "5m 跟单改为本机固定模板兜底：选择下单周期、输入对应金额、点击买涨或买跌，避免旧校准点干扰。",
+                         "自动跟单执行记录新增后端兼容上报路径，当前 API 暂未部署专用接口时会自动落到移动端事件记录。",
+                         "Firebase Android 配置已纳入构建，远程推送配置检查通过。",
+                         "保持当前签名链路，可从 1.0.38 直接覆盖升级。"
+                     ]
 }
