@@ -1,20 +1,20 @@
 {
-  "appName": "策弈量化",
-  "latestVersion": "1.0.40",
-  "latestVersionCode": 10040,
-  "minimumVersion": "1.0.30",
-  "minimumVersionCode": 10030,
-  "packageName": "com.ceyi.quant",
-  "platform": "android",
-  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.40-10040-release.apk",
-  "apkSizeBytes": 41373523,
-  "sha256": "28d97cd77b6406bfac278a0d7ac301c6039ad30796247b00bfa71803cd73fa09",
-  "updatedAt": "2026-07-11T04:58:20+08:00",
-  "releaseNotes": [
-    "修复真实自动跟单保存后的提示误导，保存后会明确显示真实信号自动执行开关、通知周期和未完成条件。",
-    "修复真实自动执行开关的保存竞态，避免刚开启后立即保存时被错误写回关闭状态。",
-    "自动化校准区域改为“自动跟单校准与执行”，明确校准、识别和5U测试不受右侧开关影响。",
-    "Firebase Android 与 Expo 远程推送配置检查通过，提升安卓端24小时信号通知可靠性。",
-    "保持当前用户签名链路，支持已安装用户直接覆盖升级；正式签名包已单独归档，后续用于应用商店或迁移版本。"
-  ]
+    "appName":  "策弈量化",
+    "latestVersion":  "1.0.41",
+    "latestVersionCode":  10041,
+    "minimumVersion":  "1.0.30",
+    "minimumVersionCode":  10030,
+    "packageName":  "com.ceyi.quant",
+    "platform":  "android",
+    "apkUrl":  "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.41-10041-release.apk",
+    "apkSizeBytes":  41381607,
+    "sha256":  "5c1e02a4c8857c2d0eb705212f566403c3b885424ed498d86d4baa49d5248db2",
+    "updatedAt":  "2026-07-11T06:05:22+08:00",
+    "releaseNotes":  [
+                         "跟单、消息、我的页面升级为功能入口列表与二级详情页，用户进入页面即可看到全部核心模块。",
+                         "跟单页新增模式、周期金额、触发优先级、权限、校准、保存、队列和记录入口，状态摘要更清晰。",
+                         "消息页新增消息列表、安卓通知、邮箱提醒、推送筛选、推送记录入口，避免通知设置被长列表挤到页面底部。",
+                         "我的页面新增账户会员、邀请好友、代理、会员开通、支付记录和客服工单入口，整体更接近正式 App 设置中心。",
+                         "保持当前签名链路，已在真实安卓机完成同签名覆盖升级验证，无签名冲突。"
+                     ]
 }
