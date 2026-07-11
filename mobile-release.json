@@ -1,20 +1,20 @@
 {
   "appName": "策弈量化",
-  "latestVersion": "1.0.42",
-  "latestVersionCode": 10042,
+  "latestVersion": "1.0.43",
+  "latestVersionCode": 10043,
   "minimumVersion": "1.0.30",
   "minimumVersionCode": 10030,
   "packageName": "com.ceyi.quant",
   "platform": "android",
-  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.42-10042-release.apk",
-  "apkSizeBytes": 90885934,
-  "sha256": "d2b2dddac9d2f3f8dc7604620102934513fc9ab8d48f541e24139ef4ae1fe44d",
-  "updatedAt": "2026-07-11T12:41:51+08:00",
+  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.43-10043-release.apk",
+  "apkSizeBytes": 41412971,
+  "sha256": "1c935d8914181baa2bd2e141e59ede054cb2ad3a4913197a30656c73ccde414e",
+  "updatedAt": "2026-07-11T16:48:19+08:00",
   "releaseNotes": [
-    "修复强制更新跳转后无法下载的问题，下载地址已同步为 1.0.42 版本化 APK。",
-    "修复自动跟单校准会话残留导致测试按钮被遮挡的问题，超时会自动结束旧校准会话。",
-    "优化 5m、10m、30m 真实自动跟单校准与执行稳定性，已在真实安卓机完成 5U 做多/做空全路径验证。",
-    "优化币安 10m/30m 下单周期选择识别与最终确认流程，避免误选周期或确认弹窗卡住。",
-    "优化 HiBT 5m 周期选择、金额输入和买涨/买跌执行链路。"
+    "历史统计与历史测算统一从 2026-07-01 00:00（北京时间）起算。",
+    "历史范围筛选调整为：今日、昨日、近7天、本月、全部。",
+    "优化 5m HiBT 自动跟单启动后的首步点击等待时间，页面就绪后更快执行。",
+    "使用指南每次登录都会弹出，并在消息列表置顶保留，方便随时重新查看。",
+    "已在真实安卓机覆盖安装验证 1.0.43 / 10043，避免更新安装签名冲突。"
   ]
 }
