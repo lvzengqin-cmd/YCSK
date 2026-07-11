@@ -1,20 +1,20 @@
 {
-    "appName":  "策弈量化",
-    "latestVersion":  "1.0.41",
-    "latestVersionCode":  10041,
-    "minimumVersion":  "1.0.30",
-    "minimumVersionCode":  10030,
-    "packageName":  "com.ceyi.quant",
-    "platform":  "android",
-    "apkUrl":  "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.41-10041-release.apk",
-    "apkSizeBytes":  41381607,
-    "sha256":  "5c1e02a4c8857c2d0eb705212f566403c3b885424ed498d86d4baa49d5248db2",
-    "updatedAt":  "2026-07-11T06:05:22+08:00",
-    "releaseNotes":  [
-                         "跟单、消息、我的页面升级为功能入口列表与二级详情页，用户进入页面即可看到全部核心模块。",
-                         "跟单页新增模式、周期金额、触发优先级、权限、校准、保存、队列和记录入口，状态摘要更清晰。",
-                         "消息页新增消息列表、安卓通知、邮箱提醒、推送筛选、推送记录入口，避免通知设置被长列表挤到页面底部。",
-                         "我的页面新增账户会员、邀请好友、代理、会员开通、支付记录和客服工单入口，整体更接近正式 App 设置中心。",
-                         "保持当前签名链路，已在真实安卓机完成同签名覆盖升级验证，无签名冲突。"
-                     ]
+  "appName": "策弈量化",
+  "latestVersion": "1.0.42",
+  "latestVersionCode": 10042,
+  "minimumVersion": "1.0.30",
+  "minimumVersionCode": 10030,
+  "packageName": "com.ceyi.quant",
+  "platform": "android",
+  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.42-10042-release.apk",
+  "apkSizeBytes": 90885934,
+  "sha256": "d2b2dddac9d2f3f8dc7604620102934513fc9ab8d48f541e24139ef4ae1fe44d",
+  "updatedAt": "2026-07-11T12:41:51+08:00",
+  "releaseNotes": [
+    "修复强制更新跳转后无法下载的问题，下载地址已同步为 1.0.42 版本化 APK。",
+    "修复自动跟单校准会话残留导致测试按钮被遮挡的问题，超时会自动结束旧校准会话。",
+    "优化 5m、10m、30m 真实自动跟单校准与执行稳定性，已在真实安卓机完成 5U 做多/做空全路径验证。",
+    "优化币安 10m/30m 下单周期选择识别与最终确认流程，避免误选周期或确认弹窗卡住。",
+    "优化 HiBT 5m 周期选择、金额输入和买涨/买跌执行链路。"
+  ]
 }
