@@ -1,20 +1,20 @@
 {
   "appName": "策弈量化",
-  "latestVersion": "1.0.43",
-  "latestVersionCode": 10043,
+  "latestVersion": "1.0.46",
+  "latestVersionCode": 10046,
   "minimumVersion": "1.0.30",
   "minimumVersionCode": 10030,
   "packageName": "com.ceyi.quant",
   "platform": "android",
-  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.43-10043-release.apk",
-  "apkSizeBytes": 41412971,
-  "sha256": "1c935d8914181baa2bd2e141e59ede054cb2ad3a4913197a30656c73ccde414e",
-  "updatedAt": "2026-07-11T16:48:19+08:00",
+  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.46-10046-release.apk",
+  "apkSizeBytes": 54902752,
+  "sha256": "4aeaab1c5ccf9d23f31258712b85801cc223e787def028ae3ef748bf1bc624ae",
+  "updatedAt": "2026-07-13T05:40:00+08:00",
   "releaseNotes": [
-    "历史统计与历史测算统一从 2026-07-01 00:00（北京时间）起算。",
-    "历史范围筛选调整为：今日、昨日、近7天、本月、全部。",
-    "优化 5m 自动跟单启动后的首步点击等待时间，页面就绪后更快执行。",
-    "使用指南每次登录都会弹出，并在消息列表置顶保留，方便随时重新查看。",
-    "已在真实安卓机覆盖安装验证 1.0.43 / 10043，避免更新安装签名冲突。"
+    "升级 HiBT 5m 自动跟单：优先使用新版事件合约控件识别，并保留无障碍与视觉识别兜底。",
+    "已显著缩短 HiBT 5m 启动与首步等待时间；页面已选择 5 分钟时会安全跳过重复切换。",
+    "目标交易 App 未停留在事件合约页时会停止执行，不进行盲目坐标点击。",
+    "Binance 10m / 30m 做多、做空均已完成真实安卓机 5U 全流程回归测试。",
+    "跟单系统日志会按北京时间逐秒记录周期选择、金额输入、方向点击、确认和最终结果。"
   ]
 }
