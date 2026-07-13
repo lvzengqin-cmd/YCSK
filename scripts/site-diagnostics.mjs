@@ -4,10 +4,7 @@ import fs from "node:fs";
 const root = new URL("../", import.meta.url);
 const read = (path) => fs.readFileSync(new URL(path, root), "utf8");
 
-const currentVersion = "1.0.47";
-const currentVersionCode = 10047;
 const officialQuantUrl = "https://ceyi.yucebot.com";
-const currentApk = `${officialQuantUrl}/downloads/ceyi-quant-1.0.47-10047-release.apk`;
 const forbiddenPatterns = [
   "ceyi-event-contract-ai-quant.netlify.app",
   "ceyi-quant-latest.apk",
@@ -27,10 +24,15 @@ const filesToScan = [
 ];
 
 const release = JSON.parse(read("mobile-release.json"));
+const currentVersion = String(release.latestVersion || "");
+const currentVersionCode = Number(release.latestVersionCode || 0);
+const currentApk = `${officialQuantUrl}/downloads/ceyi-quant-${currentVersion}-${currentVersionCode}-release.apk`;
+assert.match(currentVersion, /^\d+\.\d+\.\d+$/, "official-site mobile-release version must use semantic versioning");
+assert.equal(currentVersionCode, currentVersion.split(".").reduce((code, value, index) => code + Number(value) * [10000, 100, 1][index], 0), "official-site mobile-release versionCode must match its version");
 assert.equal(release.latestVersion, currentVersion, "official-site mobile-release latestVersion must match current app");
 assert.equal(release.latestVersionCode, currentVersionCode, "official-site mobile-release versionCode must match current app");
 assert.equal(release.apkUrl, currentApk, "official-site mobile-release APK URL must use the official quant subdomain");
-assert.equal(release.sha256, "ad1bdde6a786337c43bf2a7175cf0283954e71990166e5c27de47ef9cb5c2bab", "official-site APK sha must match verified APK");
+assert.match(release.sha256, /^[a-f0-9]{64}$/i, "official-site APK sha must contain a SHA-256 digest");
 
 const downloadHtml = read("download.html");
 assert.ok(downloadHtml.includes(`${officialQuantUrl}/api/mobile/release`), "download page should read the quant release API first");

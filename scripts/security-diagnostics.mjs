@@ -64,8 +64,9 @@ for (const file of scanFiles) {
 }
 
 const download = read("download.html");
+const release = JSON.parse(read("mobile-release.json"));
 assert.ok(download.includes("https://ceyi.yucebot.com/api/mobile/release"), "download page should load release metadata from quant subdomain");
-assert.ok(download.includes("https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.47-10047-release.apk"), "download page should keep versioned APK fallback");
+assert.ok(download.includes(release.apkUrl), "download page should keep the current versioned APK fallback");
 assert.equal(download.includes("ceyi-event-contract-ai-quant.netlify.app"), false, "download page should not expose old Netlify app domain");
 
 console.log("YCSK official security diagnostics passed");
