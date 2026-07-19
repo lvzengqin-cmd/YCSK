@@ -1,8 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="apple-touch-icon" href="/images/ceyi-app-icon.png">
     <title>河南策弈数字科技有限公司 - 策弈事件合约AI量化系统</title>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -762,6 +764,20 @@
             }
         }
     </style>
+
+    <style>
+        .brand-logo-image {
+            display: block;
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            object-fit: contain;
+            filter: drop-shadow(0 3px 8px rgba(202, 147, 45, 0.24));
+        }
+        @media (max-width: 640px) {
+            .brand-logo-image { width: 36px; height: 36px; flex-basis: 36px; }
+        }
+    </style>
 </head>
 <body>
     <!-- 导航 -->
@@ -769,7 +785,7 @@
         <div class="container">
             <nav class="navbar">
                 <a href="#" class="logo">
-                    <i class="fas fa-robot"></i>
+                    <img class="brand-logo-image" src="/images/ceyi-logo-mark.png" alt="策弈数字科技 Logo">
                     <span>策弈数字科技</span>
                 </a>
                 <ul class="nav-links">
@@ -877,21 +893,21 @@
         <div class="container">
             <div class="section-title">
                 <h2>专业套餐方案</h2>
-                <p>根据您的需求，我们提供三种专业套餐，助您轻松开启稳定盈利之路</p>
+                <p>包月版、包季版、包年版权益一致，均为一机一号、单账号使用；下载 App 自行注册后可按需开通。</p>
             </div>
             <div class="pricing-grid">
                 <div class="pricing-card">
                     <div class="pricing-header">
-                        <h3>信号版</h3>
-                        <div class="price">180U<span>/月</span></div>
-                        <p>手动跟单，配备邮箱信号提醒</p>
+                        <h3 data-plan-name="monthly">包月版</h3>
+                        <div class="price" data-plan-price="monthly">1280 USDT<span>/1个月</span></div>
+                        <p>完整会员功能，按月灵活开通</p>
                     </div>
                     <div class="pricing-body">
                         <ul class="pricing-features">
-                            <li><i class="fas fa-check-circle"></i> 手动跟单信号推送</li>
-                            <li><i class="fas fa-check-circle"></i> 邮箱实时提醒</li>
-                            <li><i class="fas fa-check-circle"></i> 适合信号核对</li>
-                            <li><i class="fas fa-check-circle"></i> 适合新手体验</li>
+                            <li><i class="fas fa-check-circle"></i> 5m、10m、30m 实时信号与全自动做单</li>
+                            <li><i class="fas fa-check-circle"></i> App 与邮箱实时信号提醒</li>
+                            <li><i class="fas fa-check-circle"></i> 一机一号、单账号使用</li>
+                            <li><i class="fas fa-check-circle"></i> App 自行注册，按需开通</li>
                         </ul>
                     </div>
                     <div class="pricing-footer">
@@ -901,16 +917,16 @@
 
                 <div class="pricing-card featured">
                     <div class="pricing-header">
-                        <h3>月付版</h3>
-                        <div class="price">1280U<span>/月</span></div>
-                        <p>24小时全自动做单，新增邮箱提醒</p>
+                        <h3 data-plan-name="quarterly">包季版</h3>
+                        <div class="price" data-plan-price="quarterly">2680 USDT<span>/3个月</span></div>
+                        <p>完整会员功能，连续使用 3 个月</p>
                     </div>
                     <div class="pricing-body">
                         <ul class="pricing-features">
-                            <li><i class="fas fa-check-circle"></i> 24小时全自动做单</li>
-                            <li><i class="fas fa-check-circle"></i> 邮箱信号提醒</li>
-                            <li><i class="fas fa-check-circle"></i> 含远程调试服务</li>
-                            <li><i class="fas fa-check-circle"></i> 需自备安卓设备</li>
+                            <li><i class="fas fa-check-circle"></i> 5m、10m、30m 实时信号与全自动做单</li>
+                            <li><i class="fas fa-check-circle"></i> App 与邮箱实时信号提醒</li>
+                            <li><i class="fas fa-check-circle"></i> 一机一号、单账号使用</li>
+                            <li><i class="fas fa-check-circle"></i> App 自行注册，按需开通</li>
                         </ul>
                     </div>
                     <div class="pricing-footer">
@@ -920,14 +936,14 @@
 
                 <div class="pricing-card">
                     <div class="pricing-header">
-                        <h3>包年版</h3>
-                        <div class="price">6900U<span>/年</span></div>
-                        <p>无限制机器，包更新包售后</p>
+                        <h3 data-plan-name="yearly">包年版</h3>
+                        <div class="price" data-plan-price="yearly">6900 USDT<span>/12个月</span></div>
+                        <p>完整会员功能，连续使用 12 个月</p>
                     </div>
                     <div class="pricing-body">
                         <ul class="pricing-features">
-                            <li><i class="fas fa-check-circle"></i> 全自动开单，包年使用</li>
-                            <li><i class="fas fa-check-circle"></i> 无限多开，支持工作室批量</li>
+                            <li><i class="fas fa-check-circle"></i> 5m、10m、30m 实时信号与全自动做单</li>
+                            <li><i class="fas fa-check-circle"></i> 一机一号、单账号使用</li>
                             <li><i class="fas fa-check-circle"></i> 包更新包售后</li>
                             <li><i class="fas fa-check-circle"></i> 专业团队技术支持</li>
                         </ul>
@@ -950,7 +966,7 @@
                     <div class="app-download-actions">
                         <a href="/download" class="app-download-button primary">
                             <i class="fab fa-android"></i> 打开下载页</a>
-                        <a href="https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.51-10051-release.apk" class="app-download-button secondary" target="_blank" rel="noopener">
+                        <a href="https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.53-10053-release.apk" class="app-download-button secondary" target="_blank" rel="noopener">
                             <i class="fas fa-download"></i> 直接下载APK
                         </a>
                     </div>
@@ -1304,9 +1320,37 @@
             }
         }
 
+        // 从量化系统读取已启用套餐；网络不可用时保留页面中的静态兜底价格。
+        async function syncMembershipPlans() {
+            try {
+                const response = await fetch("https://ceyi.yucebot.com/api/membership/plans", { cache: "no-store" });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                const plans = Array.isArray(data && data.plans) ? data.plans : [];
+                plans.forEach(function(plan) {
+                    const id = String(plan && plan.id || "");
+                    const price = Number(plan && plan.price);
+                    const months = Number(plan && plan.months);
+                    const priceElement = document.querySelector(`[data-plan-price="${id}"]`);
+                    const nameElement = document.querySelector(`[data-plan-name="${id}"]`);
+                    if (!priceElement || !Number.isFinite(price) || price <= 0 || !Number.isFinite(months) || months <= 0) return;
+                    const title = id === "monthly" ? "包月版" : id === "quarterly" ? "包季版" : id === "yearly" ? "包年版" : "";
+                    if (nameElement && title) nameElement.textContent = title;
+                    priceElement.replaceChildren();
+                    priceElement.append(document.createTextNode(price.toLocaleString(undefined, { maximumFractionDigits: 6 }) + " USDT"));
+                    const durationElement = document.createElement("span");
+                    durationElement.textContent = "/" + months + "个月";
+                    priceElement.append(durationElement);
+                });
+            } catch (error) {
+                console.warn("套餐同步暂不可用，继续显示官网兜底价格。", error);
+            }
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             loadContactConfig();
+            syncMembershipPlans();
             preserveAgentParameter();
         });
 

@@ -1,20 +1,21 @@
 {
   "appName": "策弈量化",
-  "latestVersion": "1.0.51",
-  "latestVersionCode": 10051,
+  "latestVersion": "1.0.53",
+  "latestVersionCode": 10053,
   "minimumVersion": "1.0.30",
   "minimumVersionCode": 10030,
   "packageName": "com.ceyi.quant",
   "platform": "android",
-  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.51-10051-release.apk",
-  "apkSizeBytes": 76571641,
-  "sha256": "e492d5459cf59b4bc9fb429d8e941b00f5c30cf2bf9f9a67347453a0c1be74f8",
-  "updatedAt": "2026-07-19T06:45:00+08:00",
+  "apkUrl": "https://ceyi.yucebot.com/downloads/ceyi-quant-1.0.53-10053-release.apk",
+  "apkSizeBytes": 76427478,
+  "sha256": "b9d8dcc7ced095f00bb11584739d5ee50c4d382d7d2b109b456fc869cf9f1a05",
+  "updatedAt": "2026-07-19T20:38:33.427Z",
   "releaseNotes": [
-    "BTCUSDT 信号入口价与结算价统一使用 Binance U 本位合约目标时刻的边界成交价，并重新校验近期历史价格、胜负和盈亏。",
-    "自动跟单新增总开关和 4 个独立屏蔽时段，按北京时间精确到分钟并支持跨午夜；通知、模拟订单和历史统计不受影响。",
-    "“我的”页面将开通会员或会员续费提升为第一项，账户与会员详情页也可直接进入开通或续费。",
-    "优化屏蔽期时间控件在窄屏手机上的布局和触控区域，避免按钮被裁切。",
-    "正式安装包同时支持 32 位与 64 位 ARM 安卓设备；本次更新为非强制更新，旧版本仍可继续使用。"
+    "修复并统一 App、量化站、官网及下载页的金色 Logo 与网页图标，保持图标主体居中且大小协调。",
+    "新增未来7天重大消息预警和真实自动跟单保护，支持事件前3/6/12小时暂停、事件后1/2/3小时恢复，并在数据源异常时保守暂停真实自动下单。",
+    "优化会员开通流程：BSC 自动到账保持开启，支付记录可复制收款地址并直接打开币安 App；套餐统一为包月、包季、包年且均为一机一号。",
+    "增强 BSC USDT 自动到账监听，采用多 RPC 节点健康排序、失败冷却和成功节点优先，降低单节点异常造成的到账检测延迟。",
+    "完成 Firebase Android 配置，保留24小时安卓前台监听并补齐远程推送构建配置。",
+    "本次为非强制更新，旧版本仍可继续使用。"
   ]
 }

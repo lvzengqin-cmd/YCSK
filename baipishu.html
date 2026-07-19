@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="apple-touch-icon" href="/images/ceyi-app-icon.png">
     <title>策弈事件合约AI量化、全自动开单机器人白皮书</title>
     <!-- 引入Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -163,6 +165,20 @@
         .wechat-icon { color: #2ecc71; }
         .telegram-icon { color: #00aced; }
     </style>
+
+    <style>
+        .brand-logo-image {
+            display: block;
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            object-fit: contain;
+            filter: drop-shadow(0 3px 8px rgba(202, 147, 45, 0.24));
+        }
+        @media (max-width: 640px) {
+            .brand-logo-image { width: 36px; height: 36px; flex-basis: 36px; }
+        }
+    </style>
 </head>
 <body class="text-gray-200">
     <!-- 进度条 -->
@@ -175,7 +191,7 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <i class="fas fa-robot text-primary text-2xl mr-3"></i>
+                    <img class="brand-logo-image mr-3" src="/images/ceyi-logo-mark.png" alt="策弈量化 Logo">
                     <span class="text-xl font-semibold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">策弈事件合约AI量化</span>
                 </div>
                 <nav class="hidden md:flex space-x-8">
@@ -571,7 +587,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-6 md:mb-0">
                     <div class="flex items-center">
-                        <i class="fas fa-robot text-primary text-2xl mr-3"></i>
+                        <img class="brand-logo-image mr-3" src="/images/ceyi-logo-mark.png" alt="策弈量化 Logo">
                         <span class="text-xl font-semibold bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">策弈事件合约AI量化</span>
                     </div>
                     <p class="text-gray-400 text-sm mt-2">专业的加密货币自动交易解决方案</p>
